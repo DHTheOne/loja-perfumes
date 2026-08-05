@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/**
+ * Tokens do design system.
+ * Amostrados das imagens aprovadas no lote 01 — docs/media/ANALISE-LOTE-01.md.
+ * Mantidos em sincronia com src/ui/tokens.ts, que alimenta o Three.js.
+ *
+ * Direção visual: luxo escuro. O fundo nunca é #000 puro — preto quente
+ * preserva a leitura de vidro e metal sem esmagar as sombras.
+ */
+:root {
+  --surface-void: #0a0908;
+  --surface-slate: #14120f;
+  --surface-raised: #1f1b16;
+
+  --metal-champagne: #c6b78f;
+  --metal-champagne-light: #e2d6b4;
+
+  --ink-primary: #f2ede3;
+  --ink-muted: #8f877a;
+
+  --text-hero: clamp(2.75rem, 1.2rem + 6vw, 7rem);
+  --text-lead: clamp(1rem, 0.94rem + 0.3vw, 1.25rem);
+  --space-section: clamp(4rem, 3rem + 5vw, 9rem);
+
+  --duration-slow: 700ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-void: var(--surface-void);
+  --color-slate: var(--surface-slate);
+  --color-raised: var(--surface-raised);
+  --color-champagne: var(--metal-champagne);
+  --color-ink: var(--ink-primary);
+  --color-ink-muted: var(--ink-muted);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+body {
+  background: var(--surface-void);
+  color: var(--ink-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Entrada do conteúdo do hero. Só transform e opacity — propriedades que o
+   compositor resolve sem recalcular layout. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.5rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-rise {
+  animation: rise var(--duration-slow) var(--ease-out-expo) both;
+}
+
+/* Movimento reduzido: o conteúdo aparece, mas sem deslocamento.
+   Não escondemos nada — apenas removemos o movimento. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Foco visível em qualquer elemento interativo — requisito WCAG 2.2 AA. */
+:focus-visible {
+  outline: 2px solid var(--metal-champagne);
+  outline-offset: 3px;
+}

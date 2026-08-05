@@ -18,6 +18,8 @@ dist/
 # Um PNG 4096x4096 passa de 20 MB. Só as versões otimizadas em
 # public/media/ entram no repositório.
 media/source/
+docs/media/source/
+**/media/source/
 
 # Testes e cobertura
 coverage/
