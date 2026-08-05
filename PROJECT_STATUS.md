@@ -105,14 +105,41 @@ Nenhuma bloqueia as Fases 2 a 5.
 4. Estratégia de frete (tabela própria ou integração com transportadora)
 5. Nomes das 7 linhas de fragrância (proposta em `MEDIA_PLAN.md` §5)
 
+## Fase 2 — em andamento desde 2026-08-04
+
+Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
+
+| Entrega | Estado | Verificação |
+|---|---|---|
+| Next.js 16 + React 19 + TS strict + Tailwind 4 | Feito | `next build` OK |
+| three, @react-three/fiber, @react-three/drei | Feito | 0 vulnerabilidades no install |
+| `src/3d/Bottle.tsx` — frasco procedural | Feito | Renderiza no navegador |
+| `src/3d/HeroScene.tsx` — luz, ambiente, chão | Feito | Sem erro de console |
+| Fallback sem WebGL + `prefers-reduced-motion` | Feito | Caminho implementado; **teste em navegador sem WebGL ainda pendente** |
+| `src/ui/tokens.ts` + `globals.css` | Feito | Paleta amostrada do lote 01 |
+| Home com hero | Feito | `tsc` e `eslint` limpos |
+
+### Mídia — lote 01
+
+- 32 imagens do grupo A **aprovadas** e ampliadas para 4K por Lanczos.
+  Menor resultado: 9 MP. Ver `docs/media/ANALISE-LOTE-01.md`.
+- Grupo B (2 JPEG + 6 vídeos) **reprovado** para uso de produto: frasco
+  divergente do mestre, emblema no vidro e texto queimado na imagem.
+- Real-ESRGAN avaliado e descartado — exagera o metal escovado.
+
+### Pendente
+
+- [ ] Regerar os vídeos anexando `_master-bottle.png` como referência
+- [ ] Gerar as 6 referências ortográficas (`PROMPTS.md` §12)
+- [ ] Cavidade interna do frasco 3D — exige geometria de casca, não sólido
+- [ ] Testar o fallback num navegador sem WebGL
+- [ ] Nenhum teste automatizado escrito ainda — a exigência de 80% de
+      cobertura (seção 28 do prompt mestre) segue **não atendida**
+
 ## Próximo passo
 
-Fase 2 — Arquitetura. A documentação da Fase 1 está completa. Nenhum código de
-aplicação será escrito antes da aprovação de `ARCHITECTURE.md` pelo proprietário.
-
-Em paralelo, sem dependência técnica: gerar 3 a 5 imagens de teste pela trilha
-gratuita usando `docs/media/PROMPTS.md`, para validar a direção visual antes de
-produzir o inventário completo.
+Regerar o vídeo do hero com o frasco mestre anexado, e escrever os primeiros
+testes. Nenhuma fase é declarada concluída sem teste — linha 1335.
 
 ## Regra de portão
 

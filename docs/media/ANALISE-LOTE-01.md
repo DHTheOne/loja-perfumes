@@ -55,11 +55,33 @@ Portanto: o critério de resolução de `MEDIA_PLAN.md` §9 está **atendido em
 dimensão e sem artefato visível**, que é o texto do critério. Não é o mesmo que
 detalhe capturado em 4K na origem.
 
-**Alternativa se a nitidez não bastar:** Real-ESRGAN ncnn-vulkan, gratuito e
-offline, roda bem na GPU disponível (Radeon RX 7600). Reconstrói micro-detalhe
-em vez de interpolar. Risco a observar: em gradientes muito suaves — o fundo
-escuro e o vidro — modelos desse tipo às vezes introduzem banding ou textura
-inventada. Vale comparar em duas ou três imagens antes de aplicar ao lote.
+### Real-ESRGAN — avaliado e descartado
+
+Real-ESRGAN ncnn-vulkan v0.2.5.0 foi instalado em `~/tools/` e testado no frasco
+mestre com o modelo `realesrgan-x4plus` (25 s por imagem na Radeon RX 7600).
+
+Comparação do mesmo recorte da tampa, nos dois métodos:
+
+| | Lanczos | Real-ESRGAN 4x |
+|---|---|---|
+| Arestas do colar | Boas | **Melhores** |
+| Realce especular | Bom | **Melhor** |
+| Metal escovado | Estrias finas, fiéis | **Riscos grossos — detalhe alucinado** |
+| Tonalidade | Fiel ao original | Mais contrastada |
+
+O ganho em aresta é real, mas o modelo reinterpreta o acabamento escovado como
+arranhão. Num frasco premium isso lê como material danificado, não como
+usinagem fina — e é textura que o original não tinha.
+
+**Decisão do proprietário em 2026-08-05: fica o Lanczos.** O critério de
+resolução está atendido, a fidelidade ao original é maior, e o ganho do modelo
+de IA não compensa a textura inventada.
+
+Um caminho híbrido — gerar em 4x e reduzir para 4096, o que suprimiria a
+textura exagerada preservando a aresta — chegou a ser iniciado mas foi
+interrompido em 1 de 32. Fica registrado como opção caso uma página de produto
+com zoom profundo exija mais nitidez no futuro. A ferramenta permanece
+instalada.
 
 ## Grupo B — 2 JPEG e 6 vídeos
 
