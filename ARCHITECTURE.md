@@ -28,7 +28,7 @@ Ver `docs/decisions/ADR-0003-escopo-operacional-v1.md`.
 | ORM | Prisma | Ver ADR-0002 |
 | Validação | Schema tipado compartilhado cliente/servidor | Fronteira única de validação |
 | Autenticação | Sessão via cookie `HttpOnly`/`Secure`/`SameSite` | Ver seção 6 |
-| Pagamento | Interface `PaymentProvider` | Implementação concreta pendente de `[GATEWAY_DE_PAGAMENTO]` |
+| Pagamento | Interface `PaymentProvider`, implementação **Mercado Pago** | Decidido em 2026-08-04. Ver ADR-0004 |
 
 Decisões registradas em `docs/decisions/`.
 
@@ -86,6 +86,44 @@ cliente          servidor                        gateway
 O pedido **nunca** é marcado como pago pelo redirecionamento do navegador
 (linha 854). Somente o webhook validado altera estado financeiro.
 
+### 5.1 Mercado Pago — decisões de integração
+
+Gateway definido pelo proprietário em 2026-08-04. Adequado ao mercado brasileiro:
+cobre cartão, Pix e boleto em uma integração só.
+
+**Modalidade inicial: checkout hospedado (redirecionamento).** O cliente conclui o
+pagamento em página do próprio Mercado Pago. Consequência decisiva: **dado de cartão
+nunca passa pelo nosso servidor**, o que reduz drasticamente a superfície de risco e
+o escopo de conformidade PCI. Um checkout embutido melhora a experiência e pode ser
+adotado depois, mas não no v1 — a troca é local, porque fica atrás da interface
+`PaymentProvider`.
+
+Regras de implementação, todas verificáveis em teste:
+
+1. **A notificação não é o dado.** O webhook informa que algo mudou e carrega um
+   identificador. O estado real é obtido consultando a API do gateway com esse
+   identificador. Nunca confiar no corpo da notificação como fonte de verdade.
+2. **Assinatura validada antes de qualquer processamento.** Requisição sem
+   assinatura válida é descartada e registrada, sem alterar estado.
+3. **Deduplicação por identificador de pagamento e transição.** A mesma notificação
+   chega mais de uma vez; reprocessar não pode gerar baixa dupla de estoque.
+4. **Chave de idempotência na criação da intenção de pagamento**, para que um duplo
+   clique ou um retry de rede não gere duas cobranças.
+5. **Status do gateway não é status do pedido.** Existe uma tabela de tradução
+   explícita entre os estados do provedor e os estados de domínio do pedido.
+   Guardar a string do gateway direto na coluna de status acopla o modelo ao
+   fornecedor e quebra na primeira mudança de API.
+6. **Toda notificação recebida é registrada** em tabela própria, com corpo, cabeçalho
+   de assinatura e resultado do processamento. Sem esse registro, disputa de
+   pagamento vira investigação sem evidência.
+
+> Nomes exatos de campos, cabeçalhos, endpoints e valores de status serão obtidos da
+> documentação oficial no início da Fase 9. Este documento fixa a arquitetura, não a
+> assinatura da API — conforme a proibição de inventar endpoints (linha 315).
+
+Credenciais vivem apenas em variáveis de ambiente (`.env.example`), nunca no código,
+nos commits, nos logs ou no bundle do cliente.
+
 ## 6. Autenticação e autorização
 
 - Senhas com hash moderno de custo configurável (Argon2id ou bcrypt com custo alto).
@@ -128,7 +166,6 @@ Ponto de maior risco de perda financeira real.
 
 | Item | Bloqueia | Responsável |
 |---|---|---|
-| `[GATEWAY_DE_PAGAMENTO]` | Fase 9 | Proprietário |
 | `[PROVEDOR_DE_EMAIL]` | E-mails transacionais reais | Proprietário |
 | `[PROVEDOR_DE_HOSPEDAGEM]` | Fase 12 | Proprietário |
 | Storage de mídia | Upload em produção | Definir na Fase 2 |

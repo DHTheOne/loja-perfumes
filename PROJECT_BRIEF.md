@@ -93,7 +93,7 @@ Nenhum destes bloqueia o desenvolvimento. Todos são substituíveis por busca te
 | `[DOMINIO]` | Baixo até o deploy — afeta canonical, CORS, cookies e OG |
 | `[EMAIL_DE_SUPORTE]` | Baixo — afeta contato e e-mails transacionais |
 | `[CNPJ_OU_DADOS_DA_EMPRESA]` | Médio — obrigatório nos textos legais e na nota fiscal |
-| `[GATEWAY_DE_PAGAMENTO]` | **Alto** — bloqueia a Fase 9 (checkout e webhooks) |
+| ~~`[GATEWAY_DE_PAGAMENTO]`~~ | **Resolvido em 2026-08-04: Mercado Pago.** Ver ADR-0004 |
 | `[PROVEDOR_DE_EMAIL]` | Médio — bloqueia e-mails transacionais reais |
 | `[PROVEDOR_DE_HOSPEDAGEM]` | Médio — bloqueia a Fase 12 (staging e produção) |
 
@@ -101,9 +101,9 @@ Nenhum destes bloqueia o desenvolvimento. Todos são substituíveis por busca te
 
 | # | Risco | Severidade | Mitigação |
 |---|---|---|---|
-| R1 | Conta KAIROGEN sem créditos — mídia premium indisponível | Alta | Placeholders neutros + plano de geração faseado. Ver `MEDIA_PLAN.md` |
+| R1 | Conta KAIROGEN sem créditos — mídia premium indisponível | Alta → Baixa | **Contornado** — trilha gratuita (ChatGPT Plus + Google AI Pro). Ver `MEDIA_PLAN.md` |
 | R2 | Escopo muito maior que a capacidade de uma entrega curta | Alta | Fases verificáveis; nada declarado pronto sem teste |
-| R3 | Gateway de pagamento indefinido | Alta | Camada de pagamento desacoplada atrás de interface |
+| R3 | Gateway de pagamento indefinido | — | **Resolvido** — Mercado Pago, atrás da interface `PaymentProvider`. Ver ADR-0004 |
 | R4 | Complexidade enterprise incompatível com projeto inicial | Média | Ver ADR-0003 — estrutura preparada, operação simplificada no v1 |
 | R5 | Textos legais sem revisão profissional | Média | Sinalizados no código e no checklist de lançamento |
 | R6 | 3D pesado prejudicar conversão em mobile | Média | Fallback estático, carregamento tardio, orçamento de performance |
