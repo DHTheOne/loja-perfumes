@@ -145,10 +145,12 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 - [ ] Regerar os vídeos anexando `_master-bottle.png` como referência
 - [ ] Gerar as 6 referências ortográficas (`PROMPTS.md` §12)
 - [ ] Cavidade interna do frasco 3D — exige geometria de casca, não sólido
-- [ ] Testar o fallback num navegador sem WebGL
-- [x] Testes em 2026-08-07: 38 testes vitest (catálogo, filtros, componentes
-      e páginas). Cobertura 89,9% de statements / 91% de linhas — meta de 80%
-      (seção 28) atingida no escopo jsdom; `src/3d` e a home ficam para E2E
+- [x] Fallback sem WebGL testado (2026-08-07): `e2e/hero.spec.ts` desabilita
+      `getContext('webgl')` e prova que a cena não é baixada
+- [x] Testes em 2026-08-07 (commit `7b29101`): 77 testes vitest em 12 arquivos
+      + 18 E2E Playwright em desktop e mobile. Cobertura 92,15% de statements
+      / 92,75% de linhas, com piso de 80% travado no `vitest.config.mts`;
+      `src/3d` segue fora do denominador e é coberto pelo E2E
 
 ## Próximo passo
 
@@ -156,8 +158,10 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
    nomes de linha do `MEDIA_PLAN.md` §5 — agora visíveis no site.
 2. Gerar pela trilha B as imagens por linha (categorias) para substituir o
    `BottleGlyph` nos cards, e regerar o vídeo do hero com o frasco mestre.
-3. Testes E2E (Playwright) para a cena 3D, a home e o fallback sem WebGL —
-   único trecho fora da cobertura atual.
+3. Integrar a branch `feat/media-master-bottle` (worktree em
+   `.worktrees/media-master-bottle`, commit `81b0742`) à `feat/loja-perfumes`.
+   O conjunto cinematográfico do frasco mestre foi gerado lá e ainda não
+   chegou à branch de trabalho.
 
 ## Regra de portão
 
