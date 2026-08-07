@@ -1,7 +1,7 @@
 # PROJECT STATUS
 
 > Arquivo de progresso exigido pelo prompt mestre (linha 43).
-> Atualizado em 2026-08-04. Branch de trabalho: `feat/loja-perfumes`.
+> Atualizado em 2026-08-07. Branch de trabalho: `feat/loja-perfumes`.
 
 ## Estado atual
 
@@ -118,6 +118,11 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | Fallback sem WebGL + `prefers-reduced-motion` | Feito | Caminho implementado; **teste em navegador sem WebGL ainda pendente** |
 | `src/ui/tokens.ts` + `globals.css` | Feito | Paleta amostrada do lote 01 |
 | Home com hero | Feito | `tsc` e `eslint` limpos |
+| Catálogo estático — 7 linhas com atributos de perfumaria | Feito (2026-08-07) | 11 testes vitest de integridade |
+| Header, footer e wordmark provisório ("Sillage") | Feito (2026-08-07) | Centralizado em `src/config/site.ts`; pendente aprovação do proprietário |
+| Páginas `/colecoes`, `/perfumes/[slug]` (SSG) e `/sobre` | Feito (2026-08-07) | `next build`: 13 páginas estáticas |
+| Placeholder programático do frasco (`BottleGlyph`) | Feito (2026-08-07) | Trilha A do MEDIA_PLAN §3, em CSS puro |
+| Verificação visual desktop + mobile (375 px) | Feito (2026-08-07) | Screenshots Playwright no servidor de produção |
 
 ### Mídia — lote 01
 
@@ -133,13 +138,18 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 - [ ] Gerar as 6 referências ortográficas (`PROMPTS.md` §12)
 - [ ] Cavidade interna do frasco 3D — exige geometria de casca, não sólido
 - [ ] Testar o fallback num navegador sem WebGL
-- [ ] Nenhum teste automatizado escrito ainda — a exigência de 80% de
-      cobertura (seção 28 do prompt mestre) segue **não atendida**
+- [x] Primeiros testes escritos em 2026-08-07 — 11 testes vitest (integridade
+      do catálogo e utilitário de cor). A meta de 80% de cobertura (seção 28)
+      segue aberta: componentes de UI e cena 3D ainda sem teste
 
 ## Próximo passo
 
-Regerar o vídeo do hero com o frasco mestre anexado, e escrever os primeiros
-testes. Nenhuma fase é declarada concluída sem teste — linha 1335.
+1. Proprietário aprova (ou substitui) o wordmark provisório "Sillage" e os
+   nomes de linha do `MEDIA_PLAN.md` §5 — agora visíveis no site.
+2. Gerar pela trilha B as imagens por linha (categorias) para substituir o
+   `BottleGlyph` nos cards, e regerar o vídeo do hero com o frasco mestre.
+3. Ampliar a cobertura de testes (componentes de UI) rumo aos 80% — a regra
+   da linha 1335 permanece: nenhuma fase fecha sem teste.
 
 ## Regra de portão
 

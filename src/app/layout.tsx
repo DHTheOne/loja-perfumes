@@ -3,6 +3,10 @@ import type { ReactNode } from "react";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
+import { site } from "@/config/site";
+import { SiteHeader } from "@/ui/SiteHeader";
+import { SiteFooter } from "@/ui/SiteFooter";
+
 // Duas famílias, com papéis distintos: serifada editorial para display,
 // sem-serifa neutra para leitura. Ver web/design-quality.
 const display = Cormorant_Garamond({
@@ -19,8 +23,11 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  // [NOME_DA_LOJA] segue pendente de decisão do proprietário.
-  title: "[NOME_DA_LOJA] — Perfumaria",
+  // Wordmark provisório — [NOME_DA_LOJA] pendente do proprietário (src/config/site.ts).
+  title: {
+    default: `${site.name} — ${site.tagline}`,
+    template: `%s — ${site.name}`,
+  },
   description:
     "Fragrâncias originais em edição limitada. Catálogo de demonstração; todas as fragrâncias são fictícias.",
 };
@@ -33,7 +40,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="pt-BR"
       className={`${display.variable} ${body.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-void text-ink">{children}</body>
+      <body className="min-h-full bg-void text-ink">
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }
