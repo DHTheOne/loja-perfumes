@@ -158,13 +158,19 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
    nomes de linha do `MEDIA_PLAN.md` §5 — agora visíveis no site.
 2. Gerar pela trilha B as imagens por linha (categorias) para substituir o
    `BottleGlyph` nos cards, e regerar o vídeo do hero com o frasco mestre.
-3. Integrar a branch `feat/media-master-bottle` (worktree em
-   `.worktrees/media-master-bottle`) à `feat/loja-perfumes`. As 8 imagens do
-   conjunto do frasco mestre foram versionadas em `4e40268` (2026-08-07) —
-   antes disso existiam só como arquivos não rastreados no worktree. Atenção:
-   os commits `81b0742`, `b6e7299` e `fdf672b` daquela branch estão **vazios**
-   (mensagem promete geração, nenhum arquivo); decidir antes do merge se
-   entram no histórico ou se o merge é feito com `--squash`.
+3. ~~Integrar a branch `feat/media-master-bottle`~~ **Feito em 2026-08-07**:
+   squash merge no commit `ba10ee3` (9 arquivos — 8 PNG + manifesto de
+   prompts, 8/8 hashes conferidos com `4e40268`). O `--squash` deixou de fora
+   os 4 commits vazios da branch (`81b0742`, `b6e7299`, `fdf672b`, `2262e96`).
+   A branch e o worktree `.worktrees/media-master-bottle` podem ser removidos
+   quando o proprietário quiser — todo o conteúdo já está na
+   `feat/loja-perfumes`.
+4. **Backup externo de `docs/media/source/`** — 77 arquivos, ~380 MB fora do
+   Git por política (MEDIA_PLAN §8), sem nenhuma cópia em outro lugar:
+   originais do lote 01, upscales 4K (255 MB), vídeos e o `_master-bottle.png`.
+   Disco único é hoje o maior risco de perda do projeto. Decisão do
+   proprietário: nuvem, disco externo, object storage ou repositório de mídia
+   dedicado.
 
 ### Mídia — conjunto do frasco mestre (branch `feat/media-master-bottle`)
 
