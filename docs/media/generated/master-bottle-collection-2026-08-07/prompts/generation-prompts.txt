@@ -7,7 +7,7 @@ Asset type: luxury e-commerce landing-page hero.
 Input images: Image 1 is the mandatory master bottle geometry and identity reference. Image 2 is mood and composition reference only; do not copy its bottle, cap, logo, flower or exact scene.
 Primary request: Create an original photorealistic cinematic product photograph featuring the exact master bottle, with deep translucent amber glass and liquid.
 Scene/backdrop: deep charcoal environment, dark polished wood surface, very faint atmospheric haze, no decorative objects.
-Composition/framing: wide 16:9 frame, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, restrained reflection beneath the bottle.
+Composition/framing: wide 16:9 frame at 1920 × 1080, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, restrained reflection beneath the bottle.
 Lighting/mood: one warm key light from the left, hard narrow rim light from behind, intimate premium mood, shallow depth of field.
 Materials/textures: physically plausible amber glass, visible glass thickness at edges and base, brushed champagne-metal cap, controlled highlights.
 Constraints: preserve Image 1 geometry exactly; blank bottle face; no text, logo, label, symbol, monogram, watermark, people or hands.
@@ -18,7 +18,7 @@ Asset type: luxury e-commerce landing-page hero.
 Input images: Image 1 is the mandatory master bottle geometry and identity reference. Image 2 is composition reference only; do not copy its bottle, cap, logo, flower or brown palette.
 Primary request: Create an original photorealistic cinematic product photograph featuring the exact master bottle, with clear nearly crystalline glass and a very pale citrus-gold liquid.
 Scene/backdrop: minimal pale limestone surface and softly graded cool-gray background, no decorative objects.
-Composition/framing: wide 16:9 frame, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, subtle contact reflection.
+Composition/framing: wide 16:9 frame at 1920 × 1080, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, subtle contact reflection.
 Lighting/mood: cool diffused daylight from the left with one restrained soft warm accent, fresh quiet premium mood, shallow depth of field.
 Materials/textures: physically plausible clear glass, visible thickness at edges and base, brushed champagne-metal cap, delicate pale-yellow refraction.
 Constraints: preserve Image 1 geometry exactly; blank bottle face; no text, logo, label, symbol, monogram, watermark, people or hands.
@@ -29,7 +29,7 @@ Asset type: luxury e-commerce landing-page hero.
 Input images: Image 1 is the mandatory master bottle geometry and identity reference. Image 2 is composition reference only; do not copy its bottle, cap, logo, flower or warm brown palette.
 Primary request: Create an original photorealistic cinematic product photograph featuring the exact master bottle, with restrained translucent mineral-blue glass and liquid.
 Scene/backdrop: deep slate environment and a subtly wet dark stone surface, no objects and no water drops on the bottle.
-Composition/framing: wide 16:9 frame, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, soft reflection contained beneath the bottle.
+Composition/framing: wide 16:9 frame at 1920 × 1080, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, soft reflection contained beneath the bottle.
 Lighting/mood: cool aquatic side light from the left, narrow neutral rim from behind, calm mineral atmosphere, shallow depth of field.
 Materials/textures: physically plausible desaturated blue glass, visible thickness and refraction, brushed champagne-metal cap, controlled wet-surface highlights.
 Constraints: preserve Image 1 geometry exactly; blank bottle face; no text, logo, label, symbol, monogram, watermark, people or hands.
@@ -40,7 +40,7 @@ Asset type: luxury e-commerce landing-page hero.
 Input images: Image 1 is the mandatory master bottle geometry and identity reference. Image 2 is mood and composition reference only; do not copy its bottle, cap, logo, flower or exact scene.
 Primary request: Create an original photorealistic cinematic product photograph featuring the exact master bottle, with black-smoke translucent glass that still reveals thickness and transparency along the edges.
 Scene/backdrop: deep charcoal environment and low-reflection charcoal stone surface, no decorative objects.
-Composition/framing: wide 16:9 frame, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, minimal grounded reflection.
+Composition/framing: wide 16:9 frame at 1920 × 1080, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, minimal grounded reflection.
 Lighting/mood: sculptural hard back rim defining the silhouette and one small warm side accent from the left, dense restrained premium mood, shallow depth of field.
 Materials/textures: physically plausible smoke-black glass, luminous edge thickness, brushed champagne-metal cap, precise controlled highlights.
 Constraints: preserve Image 1 geometry exactly; blank bottle face; no text, logo, label, symbol, monogram, watermark, people or hands.
@@ -91,4 +91,5 @@ Constraints: identical scale for front and side; orthographic projection; parall
 Avoid: fully opaque plastic, three-quarter view, extra view, mismatched proportions between views, Image 3 bottle design, black faceted cap, gold collar, glossy environment reflections.
 
 [VIDEO — LENHO VIGIL]
+Format: 1920 × 1080, 16:9, six seconds, no audio.
 Use the uploaded Lenho Vigil image as both the exact first frame and exact end frame. Preserve the bottle's geometry, amber glass, blank face, cylindrical brushed champagne-metal cap, lighting and background throughout. One continuous six-second shot. The camera glides very slowly to the right in a restrained arc of approximately 15 degrees while moving almost imperceptibly closer, then settles naturally into the supplied matching end frame. Nothing moves except a barely visible atmospheric haze catching the rim light. Deep charcoal environment, dark polished surface, warm key light from the left, hard narrow rim light from behind. Photorealistic luxury product cinematography, shallow depth of field. No cuts, no zoom snaps, no camera shake, no geometry morphing, no cap deformation, no added objects, no text, no logos, no labels, no people, no hands and no audio.
