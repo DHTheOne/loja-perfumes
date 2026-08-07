@@ -159,9 +159,30 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 2. Gerar pela trilha B as imagens por linha (categorias) para substituir o
    `BottleGlyph` nos cards, e regerar o vídeo do hero com o frasco mestre.
 3. Integrar a branch `feat/media-master-bottle` (worktree em
-   `.worktrees/media-master-bottle`, commit `81b0742`) à `feat/loja-perfumes`.
-   O conjunto cinematográfico do frasco mestre foi gerado lá e ainda não
-   chegou à branch de trabalho.
+   `.worktrees/media-master-bottle`) à `feat/loja-perfumes`. As 8 imagens do
+   conjunto do frasco mestre foram versionadas em `4e40268` (2026-08-07) —
+   antes disso existiam só como arquivos não rastreados no worktree. Atenção:
+   os commits `81b0742`, `b6e7299` e `fdf672b` daquela branch estão **vazios**
+   (mensagem promete geração, nenhum arquivo); decidir antes do merge se
+   entram no histórico ou se o merge é feito com `--squash`.
+
+### Mídia — conjunto do frasco mestre (branch `feat/media-master-bottle`)
+
+Cobertura por linha do catálogo, em `docs/media/generated/master-bottle-collection-2026-08-07/`:
+
+| Linha | `cinematic/` 1920×1080 | `refs-3d/` 2048×2048 |
+|---|---|---|
+| `lenho-vigil` | ✔ | ✔ |
+| `alba-citrica` | ✔ | ✔ |
+| `mare-clara` | ✔ | ✔ |
+| `noturno-absoluto` | ✔ | ✔ |
+| `flora-velada` | **falta** | **falta** |
+| `ambar-secreto` | **falta** | **falta** |
+| `comum-raro` | **falta** | **falta** |
+
+Os originais de referência em `docs/media/source/` (3 arquivos, ~5 MB, entre
+eles `_master-bottle.png`) seguem **fora do Git por política** (MEDIA_PLAN §8)
+e não têm backup externo — pendência do proprietário.
 
 ## Regra de portão
 
