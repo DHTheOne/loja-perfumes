@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
+import { siteOrigin } from "@/config/origin";
 import { site } from "@/config/site";
 import { SiteHeader } from "@/ui/SiteHeader";
 import { SiteFooter } from "@/ui/SiteFooter";
@@ -23,6 +24,9 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
+  // Base para URLs absolutas de canonical, robots e Open Graph. Sem ela, o
+  // Next resolve rotas relativas contra localhost e avisa no build.
+  metadataBase: new URL(siteOrigin()),
   // Wordmark provisório — [NOME_DA_LOJA] pendente do proprietário (src/config/site.ts).
   title: {
     default: `${site.name} — ${site.tagline}`,

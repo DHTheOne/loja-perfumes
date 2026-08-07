@@ -40,9 +40,16 @@ export const occasionOptions: readonly OccasionOption[] = [
 ] as const;
 
 /**
- * Params de URL são entrada não confiável: aceita apenas valores da lista
- * conhecida e ignora o resto (fail-closed). Arrays (param repetido) usam
- * o primeiro valor.
+ * Params de URL são entrada não confiável: só valores da allowlist viram
+ * filtro; qualquer outro é ignorado e a listagem sai completa. Arrays (param
+ * repetido) usam o primeiro valor.
+ *
+ * Não confundir com "fail-closed" — como o nome anterior sugeria. Um filtro
+ * que falha fechado devolveria lista vazia diante de um param inválido, o que
+ * transformaria um erro de digitação na URL numa página sem produtos. A
+ * garantia real aqui é outra, e é de tipo: o valor cru nunca é usado. Ele só
+ * serve para procurar uma opção na allowlist, e é essa opção — não a string
+ * do usuário — que chega ao filtro e à UI. Nada do param é refletido no HTML.
  */
 export function parseFamilyParam(
   value: string | string[] | undefined,

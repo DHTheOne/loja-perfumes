@@ -49,4 +49,30 @@ describe("páginas estáticas", () => {
       );
     });
   }
+
+  /**
+   * O fornecedor não pode impor condições à devolução dentro do prazo de
+   * arrependimento — o direito do art. 49 recai sobre o produto, não sobre a
+   * embalagem (orientação da Senacon/MJSP e do TJDFT). Uma minuta anterior
+   * exigia lacre e película intactos; este teste impede o retorno da cláusula.
+   */
+  it("/trocas não condiciona o arrependimento ao estado da embalagem", () => {
+    const { container } = render(<TrocasPage />);
+    const texto = container.textContent ?? "";
+
+    expect(texto).not.toMatch(/exige o lacre/i);
+    expect(texto).toMatch(/não depende do estado da embalagem/i);
+    expect(texto).toMatch(/não impomos nenhuma outra condição/i);
+  });
+
+  /** Os dois prazos de 30 dias do CDC são distintos e não podem ser fundidos. */
+  it("/trocas separa o prazo para reclamar do prazo para sanar o vício", () => {
+    const { container } = render(<TrocasPage />);
+    const texto = container.textContent ?? "";
+
+    expect(texto).toMatch(/Prazo para reclamar/);
+    expect(texto).toMatch(/Prazo para resolver/);
+    expect(texto).toMatch(/art\. 26/);
+    expect(texto).toMatch(/art\. 18, § 1º/);
+  });
 });

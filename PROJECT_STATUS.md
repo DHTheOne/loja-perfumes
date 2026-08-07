@@ -115,7 +115,7 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | three, @react-three/fiber, @react-three/drei | Feito | 0 vulnerabilidades no install |
 | `src/3d/Bottle.tsx` — frasco procedural | Feito | Renderiza no navegador |
 | `src/3d/HeroScene.tsx` — luz, ambiente, chão | Feito | Sem erro de console |
-| Fallback sem WebGL + `prefers-reduced-motion` | Feito | Caminho implementado; **teste em navegador sem WebGL ainda pendente** |
+| Fallback sem WebGL + `prefers-reduced-motion` + dispositivo fraco | Feito (2026-08-07) | Verificado em navegador: E2E Playwright cobre os 3 caminhos e prova que o chunk do three.js não é sequer baixado |
 | `src/ui/tokens.ts` + `globals.css` | Feito | Paleta amostrada do lote 01 |
 | Home com hero | Feito | `tsc` e `eslint` limpos |
 | Catálogo estático — 7 linhas com atributos de perfumaria | Feito (2026-08-07) | 11 testes vitest de integridade |
@@ -123,9 +123,14 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | Páginas `/colecoes`, `/perfumes/[slug]` (SSG) e `/sobre` | Feito (2026-08-07) | `next build`: 13 páginas estáticas |
 | Placeholder programático do frasco (`BottleGlyph`) | Feito (2026-08-07) | Trilha A do MEDIA_PLAN §3, em CSS puro |
 | Verificação visual desktop + mobile (375 px) | Feito (2026-08-07) | Screenshots Playwright no servidor de produção |
-| Filtros por família e ocasião em `/colecoes` | Feito (2026-08-07) | URL como estado; parsers fail-closed testados |
+| Filtros por família e ocasião em `/colecoes` | Feito (2026-08-07) | URL como estado; parsers com allowlist testados |
 | Página 404 e minutas legais (`/privacidade`, `/termos`, `/trocas`) | Feito (2026-08-07) | Banner de minuta obrigatório — risco R5 sinalizado no site |
-| Suíte ampliada: 38 testes, cobertura 89,9% st / 91% linhas | Feito (2026-08-07) | `vitest --coverage` (v8); `src/3d` excluído, cobre via E2E |
+| Suíte ampliada: 77 testes unitários + 18 E2E | Feito (2026-08-07) | `vitest --coverage` (v8) com threshold de 80% travado; `src/3d` segue excluído e é coberto pelo Playwright |
+| Carregamento sob demanda do 3D (ARCHITECTURE §9) | Feito (2026-08-07) | `HeroVisual` carrega a cena em `requestIdleCallback`; three.js (968 KB) fora dos 8 chunks iniciais da home |
+| Fallback móvel com art direction | Feito (2026-08-07) | `<picture>` serve `hero-mobile.jpg` (retrato) até 767 px; E2E confirma `currentSrc` por viewport |
+| Desacoplamento catálogo → UI (ARCHITECTURE §2) | Feito (2026-08-07) | `lineKey` saiu de `FragranceLine`; mapa slug → vidro em `src/ui/lineVisual.ts` |
+| `robots.txt`, `sitemap.xml` e `metadataBase` | Feito (2026-08-07) | Minutas com `noindex` + `disallow`, fora do sitemap; invariante travado em `seo.test.ts` |
+| Revisão do relatório 2026-08-07 — itens ALTA, MÉDIA e BAIXA | Feito (2026-08-07) | 8/8 itens tratados; ver seção "Riscos" para o que segue aberto |
 
 ### Mídia — lote 01
 

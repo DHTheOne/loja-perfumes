@@ -5,7 +5,10 @@ import { MinutaNotice } from "@/ui/MinutaNotice";
 export const metadata: Metadata = {
   title: "Trocas e devoluções",
   description:
-    "Minuta da política de trocas: arrependimento em 7 dias (CDC art. 49), defeitos em 30 dias e procedimento de devolução.",
+    "Minuta da política de trocas: arrependimento em 7 dias (CDC art. 49), vício do produto (arts. 18 e 26) e procedimento de devolução.",
+  // Minuta sem validade legal: não pode ser indexada antes da revisão
+  // jurídica e da substituição dos placeholders. Ver PROJECT_STATUS (R5).
+  robots: { index: false, follow: false },
 };
 
 export default function TrocasPage() {
@@ -40,27 +43,56 @@ export default function TrocasPage() {
           </p>
         </section>
 
-        <section aria-labelledby="lacre">
-          <h2 id="lacre" className="font-display text-2xl font-light text-ink">
-            2. Condição do produto
+        <section aria-labelledby="condicao">
+          <h2 id="condicao" className="font-display text-2xl font-light text-ink">
+            2. Condição do produto e da embalagem
           </h2>
           <p className="mt-3 font-sans text-sm leading-relaxed text-ink-muted">
-            Perfume é produto de uso pessoal: por higiene e segurança, a
-            devolução por arrependimento exige o lacre e a película do
-            frasco intactos. Essa condição não se aplica a produtos com
-            defeito ou avaria.
+            O arrependimento não depende do estado da embalagem. Você pode
+            devolver o perfume mesmo que o lacre e a película já tenham sido
+            abertos e o produto tenha sido experimentado: o direito do art. 49
+            recai sobre o produto, não sobre a caixa. Dentro do prazo de 7
+            dias não exigimos inviolabilidade, não cobramos multa e não
+            impomos nenhuma outra condição para aceitar a devolução.
+          </p>
+          <p className="mt-3 font-sans text-sm leading-relaxed text-ink-muted">
+            Pedimos apenas que, quando for possível, a embalagem original
+            seja enviada junto — é um pedido, não um requisito. A ausência
+            dela não impede a devolução nem reduz o valor do reembolso.
           </p>
         </section>
 
         <section aria-labelledby="defeito">
           <h2 id="defeito" className="font-display text-2xl font-light text-ink">
-            3. Defeito ou avaria — 30 dias
+            3. Defeito ou avaria
           </h2>
           <p className="mt-3 font-sans text-sm leading-relaxed text-ink-muted">
+            <strong className="font-medium text-ink">
+              Prazo para reclamar.
+            </strong>{" "}
             Produto que chegue violado, avariado ou com defeito (válvula,
-            vazamento, frasco danificado) pode ser reclamado em até 30 dias
-            após o recebimento (art. 26 do CDC). Você escolhe entre
-            substituição, abatimento do preço ou reembolso integral.
+            vazamento, frasco danificado) deve ser reclamado em até 30 dias
+            contados do recebimento, quando o vício for aparente (art. 26,
+            I, do CDC). Vício oculto conta do momento em que fica
+            evidenciado (art. 26, § 3º).
+          </p>
+          <p className="mt-3 font-sans text-sm leading-relaxed text-ink-muted">
+            <strong className="font-medium text-ink">
+              Prazo para resolver.
+            </strong>{" "}
+            Recebida a reclamação, temos até 30 dias para sanar o vício
+            (art. 18, § 1º). Se não sanarmos nesse prazo, você escolhe entre
+            substituição por outro produto do mesmo tipo, devolução imediata
+            da quantia paga com correção monetária, ou abatimento
+            proporcional do preço. Você pode fazer essa escolha de imediato,
+            sem esperar os 30 dias, nas hipóteses do art. 18, § 3º — entre
+            elas, quando a substituição comprometer as características do
+            produto ou quando se tratar de produto essencial.
+          </p>
+          <p className="mt-3 font-sans text-sm leading-relaxed text-champagne">
+            [CLASSIFICACAO_DO_PRODUTO — a classificação do perfume como bem
+            durável ou não durável define se o prazo do art. 26 é de 30 ou de
+            90 dias. Pendente de definição na revisão jurídica.]
           </p>
         </section>
 

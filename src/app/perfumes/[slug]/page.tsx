@@ -6,7 +6,7 @@ import { formatPriceBRL, getLineBySlug, lines } from "@/catalog/lines";
 import { site } from "@/config/site";
 import { BottleGlyph } from "@/ui/BottleGlyph";
 import { hexToRgba } from "@/ui/color";
-import { line } from "@/ui/tokens";
+import { glassColorForSlug, lineKeyForSlug } from "@/ui/lineVisual";
 
 /** Catálogo estático na Fase 2 → todas as páginas saem no build. */
 export function generateStaticParams() {
@@ -52,7 +52,7 @@ export default async function PerfumePage({ params }: PageProps) {
   const fragrance = getLineBySlug(slug);
   if (!fragrance) notFound();
 
-  const glass = line[fragrance.lineKey];
+  const glass = glassColorForSlug(fragrance.slug);
   const seasonsLabel = fragrance.seasons.join(" · ");
 
   return (
@@ -80,7 +80,7 @@ export default async function PerfumePage({ params }: PageProps) {
           />
           <div className="relative flex aspect-[4/5] items-center justify-center">
             <BottleGlyph
-              lineKey={fragrance.lineKey}
+              lineKey={lineKeyForSlug(fragrance.slug)}
               className="aspect-[2/5] w-28 md:w-36"
             />
           </div>
@@ -134,7 +134,7 @@ export default async function PerfumePage({ params }: PageProps) {
               >
                 Vendas abrem em breve
               </button>
-              <p className="mt-3 font-sans text-xs leading-relaxed text-ink-muted/70">
+              <p className="mt-3 font-sans text-xs leading-relaxed text-ink-muted">
                 A loja está em construção — preços exibidos são de
                 demonstração.
               </p>
@@ -154,7 +154,7 @@ export default async function PerfumePage({ params }: PageProps) {
                 <div key={stage.key}>
                   <p className="font-display text-xl font-light text-ink">
                     {stage.label}
-                    <span className="ml-3 font-sans text-xs uppercase tracking-widest text-ink-muted/70">
+                    <span className="ml-3 font-sans text-xs uppercase tracking-widest text-ink-muted">
                       {stage.hint}
                     </span>
                   </p>
@@ -225,7 +225,7 @@ export default async function PerfumePage({ params }: PageProps) {
             </dl>
           </section>
 
-          <p className="mt-12 font-sans text-xs leading-relaxed text-ink-muted/70">
+          <p className="mt-12 font-sans text-xs leading-relaxed text-ink-muted">
             {site.demoNotice}
           </p>
         </div>

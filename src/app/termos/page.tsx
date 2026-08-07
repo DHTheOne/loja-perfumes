@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Termos de compra",
   description:
     "Minuta dos termos de compra: cadastro, preços, pagamento via Mercado Pago, entrega e responsabilidades.",
+  // Minuta sem validade legal: não pode ser indexada antes da revisão
+  // jurídica e da substituição dos placeholders. Ver PROJECT_STATUS (R5).
+  robots: { index: false, follow: false },
 };
 
 export default function TermosPage() {

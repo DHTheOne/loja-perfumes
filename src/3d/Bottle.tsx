@@ -31,17 +31,21 @@ const CAP_Y = BODY_TOP + COLLAR.height + CAP.height / 2;
 type BottleProps = {
   /** Família olfativa — define a cor do vidro. Ver MEDIA_PLAN.md §5. */
   lineKey?: LineKey;
-  /** Desliga a rotação. Usado quando o usuário pede movimento reduzido. */
-  isStatic?: boolean;
 };
 
-export function Bottle({ lineKey = "comumRaro", isStatic = false }: BottleProps) {
+/**
+ * Não há prop para desligar a rotação: `prefers-reduced-motion` é resolvido
+ * em `HeroScene`, que devolve o fallback estático antes de montar o Canvas.
+ * Parar a rotação aqui não pouparia nada — o frameloop do r3f continuaria
+ * renderizando o vidro e o reflexo a cada frame.
+ */
+export function Bottle({ lineKey = "comumRaro" }: BottleProps) {
   const groupRef = useRef<Group>(null);
   const glassColor = line[lineKey];
 
   useFrame((state, delta) => {
     const group = groupRef.current;
-    if (!group || isStatic) return;
+    if (!group) return;
 
     // Órbita lenta e contínua, sem corte — mesma linguagem de movimento
     // dos vídeos de referência. delta mantém a velocidade independente do FPS.

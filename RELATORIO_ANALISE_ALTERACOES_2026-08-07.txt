@@ -1,0 +1,158 @@
+RELATÓRIO DE ANÁLISE DAS ALTERAÇÕES — LOJA PERFUMES
+Data/hora do snapshot: 2026-08-07 00:44 (UTC-03)
+Branch/commit: feat/loja-perfumes — be44268
+Escopo: diferenças da branch em relação à main e estado funcional do commit acima.
+
+VEREDITO
+Boa base para a Fase 2 e adequada como demonstração local. Não está pronta para
+publicação comercial: há duas inconsistências relevantes nas minutas jurídicas,
+falhas de contraste WCAG 2.2 AA e divergência entre o fallback 3D implementado e
+a arquitetura documentada.
+
+ERROS E RISCOS PRIORITÁRIOS
+
+1. ALTA — Restrição indevida ao direito de arrependimento
+   Evidência: src/app/trocas/page.tsx:43-51 exige lacre e película intactos.
+   Problema: a orientação oficial da Senacon informa que o fornecedor não pode
+   impor condições à devolução no prazo de arrependimento; o CDC, art. 49, não
+   contém a restrição descrita na página.
+   Impacto: política potencialmente abusiva, conflito com o consumidor e risco
+   regulatório/reputacional.
+   Correção: remover essa condição da minuta e submeter toda a política a revisão
+   jurídica antes de indexar ou publicar.
+
+2. ALTA — A minuta mistura prazo de reclamação e prazo para sanar vício
+   Evidência: src/app/trocas/page.tsx:57-63 afirma “defeito — 30 dias” e oferece
+   imediatamente substituição, abatimento ou reembolso.
+   Problema: o CDC, art. 26, diferencia 30 dias para produtos não duráveis e 90
+   para duráveis; o art. 18, §1º, trata separadamente do prazo de até 30 dias para
+   o fornecedor sanar o vício antes das alternativas, ressalvadas exceções legais.
+   Impacto: informação jurídica incompleta ou incorreta ao cliente.
+   Correção: um profissional deve classificar o produto, separar os dois prazos e
+   reescrever o procedimento. O banner “Minuta” mitiga, mas não corrige o texto.
+
+3. ALTA — Contraste abaixo da meta WCAG 2.2 AA
+   Evidência: src/ui/SiteFooter.tsx:71 e
+   src/app/perfumes/[slug]/page.tsx:137,157,228 usam text-ink-muted/70.
+   Reprodução: Lighthouse móvel marcou Accessibility 96/100 e falha de contraste.
+   Razões observadas: 3,19:1 no aviso do rodapé e 3,24:1 em avisos/dicas da página
+   de perfume; o mínimo esperado para texto normal é 4,5:1.
+   Impacto: texto difícil de ler e descumprimento do requisito do PROJECT_BRIEF.
+   Correção: remover/reduzir a transparência, criar token de texto auxiliar com
+   contraste >= 4,5:1 e repetir Lighthouse nas rotas principais.
+
+4. MÉDIA — prefers-reduced-motion ainda mantém Canvas/WebGL
+   Evidência: src/3d/HeroScene.tsx:96-113 só usa StaticFallback quando não há
+   WebGL; em :184, prefersReducedMotion apenas define isStatic no frasco.
+   Reprodução: com prefers-reduced-motion=true, o navegador retornou
+   canvasCount=1 e contexto WebGL ativo.
+   Divergência: ARCHITECTURE.md:160-162 exige fallback estático nesse modo;
+   PROJECT_STATUS.md:118 registra o item como feito.
+   Impacto: consumo desnecessário de GPU e requisito de acessibilidade/performance
+   parcialmente atendido.
+   Correção: retornar StaticFallback quando !hasWebGL || prefersReducedMotion e
+   criar E2E que valide ausência de canvas.
+
+5. MÉDIA — 3D é carregado imediatamente e não cobre dispositivo fraco
+   Evidência: import estático em src/app/page.tsx:4 e render em :24; não existe
+   heurística de dispositivo fraco em HeroScene. O fallback usa sempre
+   hero-desktop.jpg (HeroScene.tsx:78-88), embora hero-mobile.jpg exista.
+   Divergência: ARCHITECTURE.md:160-162 pede carregamento sob demanda, depois do
+   conteúdo, e fallback em dispositivo fraco.
+   Impacto: bundle/GPU desnecessários em celulares e composição inadequada do
+   fallback móvel.
+   Correção: carregar a cena dinamicamente após o conteúdo/LCP, definir critério
+   mensurável de fallback e usar <picture> ou source responsivo para a mídia.
+
+6. MÉDIA — Catálogo depende da camada visual
+   Evidência: src/catalog/types.ts:1 importa LineKey de @/ui/tokens e :48 inclui
+   lineKey no contrato do catálogo.
+   Divergência: ARCHITECTURE.md:50-51 determina que domínio não importe UI.
+   Impacto: futura migração para Prisma/banco fica acoplada à apresentação.
+   Correção: manter o modelo de catálogo sem tokens visuais e criar um mapa
+   FragranceLine/family -> LineKey na camada de UI.
+
+7. BAIXA — Geometria CSS do BottleGlyph usa percentual no eixo errado
+   Evidência: src/ui/BottleGlyph.tsx:38 combina mt-[15%] e h-[85%]. Em CSS,
+   margin-top percentual é calculado pela largura do contêiner, não pela altura.
+   Reprodução a 375 px: corpo iniciou em y=272,9, sobrepondo tampa/colar, e
+   terminou antes da base do glyph.
+   Correção: posicionar o corpo com top-[15%] e bottom-0/absolute, ou usar grid.
+
+8. BAIXA — “fail-closed” não descreve o comportamento real dos filtros
+   Evidência: src/catalog/filter.ts:44 e testes chamam a estratégia de fail-closed,
+   mas um valor inválido é ignorado e a página exibe as 7 linhas.
+   Impacto: documentação de segurança enganosa, embora não haja XSS observado.
+   Correção: renomear para “allowlist + ignorar inválidos” ou retornar estado vazio
+   se a intenção real for falhar fechado.
+
+ACERTOS
+
+- Build de produção, TypeScript strict e ESLint passam sem erros.
+- 38 testes em 8 arquivos passam; cobertura: 89,89% statements, 82,85% branches,
+  90,90% functions e 91,01% lines.
+- npm audit: 0 vulnerabilidades; varredura local não encontrou segredos; somente
+  .env.example está versionado.
+- Catálogo tipado com 7 linhas, slugs únicos, notas completas e preços inteiros em
+  centavos; helpers e filtros têm bons testes de integridade e borda.
+- Server Components são o padrão; /perfumes/[slug] gera as 7 páginas via SSG;
+  slug inválido e rota inexistente retornam 404.
+- Todas as rotas e links internos testados responderam 200; não houve overflow a
+  375 px; filtros combinados, inválidos e sem resultado funcionaram.
+- Navegação semântica, skip link, um h1 por página, metadados por rota e aviso de
+  conteúdo fictício estão bem implementados.
+- Lighthouse local: Best Practices 100, SEO 100; trace móvel local apresentou
+  LCP 1,002 s e CLS 0,00 (sem throttling; não representa dados reais de usuários).
+- Minutas legais exibem banner explícito de não validade e mantêm placeholders
+  visíveis, evitando aparência de documento final.
+
+PONTOS DE MELHORIA
+
+1. Bloquear indexação das minutas (robots noindex) e/ou publicação em produção
+   até revisão jurídica e substituição de CNPJ, e-mail, comarca e frete.
+2. Adicionar thresholds >= 80% em vitest.config.mts; hoje a cobertura supera a
+   meta, mas uma regressão não falha automaticamente o gate.
+3. Criar E2E para home/3D: sem WebGL, reduced motion, dispositivo fraco, fallback
+   móvel, console e navegação por teclado.
+4. Investigar os dois warnings de runtime observados: THREE.Clock depreciado e
+   aviso de precisão do shader WebGL.
+5. Dar título específico à página 404; atualmente ela herda o título global.
+6. Aumentar a área vertical clicável dos links do header móvel para melhorar o
+   toque, mesmo sem overflow.
+
+VALIDAÇÕES EXECUTADAS NO COMMIT be44268
+
+- npm run build: PASS — 16 páginas; /colecoes dinâmica; 7 produtos SSG.
+- npx tsc --noEmit: PASS.
+- npm run lint: PASS.
+- npm test -- --coverage: PASS — 38/38.
+- npm audit --audit-level=moderate: PASS — 0 vulnerabilidades.
+- Browser em build de produção: rotas, 404, filtros e layout móvel: PASS.
+- Lighthouse móvel: Accessibility 96 (FAIL em contraste), Best Practices 100,
+  SEO 100, Agentic Browsing 100.
+- Performance local: LCP 1,002 s; CLS 0,00; sem dados CrUX.
+
+LIMITAÇÕES
+
+- Não houve baseline visual versionada; regressão visual é inconclusiva.
+- O comando 21st review não estava instalado; a revisão visual foi manual via
+  Chrome DevTools/Lighthouse.
+- Não foi feito parecer jurídico; foram comparadas apenas afirmações objetivas
+  das minutas com fontes oficiais.
+
+FONTES OFICIAIS CONSULTADAS PARA OS PONTOS JURÍDICOS
+
+- Código de Defesa do Consumidor (arts. 18, 26 e 49):
+  https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm
+- Decreto do Comércio Eletrônico nº 7.962/2013:
+  https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/decreto/d7962.htm
+- Senacon/MJSP — direito de arrependimento em compras on-line:
+  https://www.gov.br/mj/pt-br/assuntos/noticias/consumidor-tem-direito-ao-arrependimento-em-compras-on-line
+
+PRIORIDADE RECOMENDADA
+
+1. Corrigir e revisar juridicamente /trocas.
+2. Corrigir contraste AA.
+3. Corrigir fallback/lazy-load do 3D e cobrir com E2E.
+4. Desacoplar catálogo de UI antes da camada de banco.
+5. Aplicar melhorias menores de testes, 404 e acabamento visual.

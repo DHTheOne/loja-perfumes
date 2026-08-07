@@ -6,7 +6,6 @@ import {
   lines,
   startingPriceCents,
 } from "@/catalog/lines";
-import { line as lineColors } from "@/ui/tokens";
 
 /**
  * Integridade do seed — estas invariantes viram constraints de banco na
@@ -42,12 +41,6 @@ describe("catálogo — integridade das linhas", () => {
         expect(volume.priceCents).toBeGreaterThan(0);
         expect(volume.ml).toBeGreaterThan(0);
       }
-    }
-  });
-
-  it("aponta cada linha para uma cor de vidro existente nos tokens", () => {
-    for (const fragrance of lines) {
-      expect(lineColors[fragrance.lineKey]).toMatch(/^#[0-9a-f]{6}$/i);
     }
   });
 

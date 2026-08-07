@@ -4,7 +4,7 @@ import { formatPriceBRL, startingPriceCents } from "@/catalog/lines";
 import type { FragranceLine } from "@/catalog/types";
 import { BottleGlyph } from "@/ui/BottleGlyph";
 import { hexToRgba } from "@/ui/color";
-import { line } from "@/ui/tokens";
+import { glassColorForSlug, lineKeyForSlug } from "@/ui/lineVisual";
 
 type LineCardProps = {
   fragrance: FragranceLine;
@@ -19,7 +19,7 @@ type LineCardProps = {
  * permanece.
  */
 export function LineCard({ fragrance, headingLevel = "h3" }: LineCardProps) {
-  const glass = line[fragrance.lineKey];
+  const glass = glassColorForSlug(fragrance.slug);
   const Heading = headingLevel;
 
   return (
@@ -37,7 +37,7 @@ export function LineCard({ fragrance, headingLevel = "h3" }: LineCardProps) {
 
       <div className="relative flex justify-center pt-12">
         <BottleGlyph
-          lineKey={fragrance.lineKey}
+          lineKey={lineKeyForSlug(fragrance.slug)}
           className="aspect-[2/5] w-14 transition-transform duration-700 group-hover:-translate-y-1.5 sm:w-16"
         />
       </div>

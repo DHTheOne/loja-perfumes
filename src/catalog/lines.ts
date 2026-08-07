@@ -17,7 +17,6 @@ export const lines: readonly FragranceLine[] = [
     name: "Lenho Vigil",
     family: "amadeirada",
     familyLabel: "Amadeirada",
-    lineKey: "lenhoVigil",
     tagline: "A madeira que guarda o fim da tarde.",
     description:
       "Um amadeirado seco e ereto, construído sobre cedro-do-atlas e vetiver. " +
@@ -44,7 +43,6 @@ export const lines: readonly FragranceLine[] = [
     name: "Alba Cítrica",
     family: "citrica",
     familyLabel: "Cítrica",
-    lineKey: "albaCitrica",
     tagline: "O primeiro minuto da manhã, retido em vidro.",
     description:
       "Cítricos de casca fria — bergamota, limão-siciliano e yuzu — sobre um " +
@@ -71,7 +69,6 @@ export const lines: readonly FragranceLine[] = [
     name: "Flora Velada",
     family: "floral",
     familyLabel: "Floral",
-    lineKey: "floraVelada",
     tagline: "Flores atrás de um véu de luz.",
     description:
       "Um floral fora de foco: peônia e jasmim-sambac amaciados por aldeídos, " +
@@ -98,7 +95,6 @@ export const lines: readonly FragranceLine[] = [
     name: "Âmbar Secreto",
     family: "oriental",
     familyLabel: "Oriental",
-    lineKey: "ambarSecreto",
     tagline: "O que o latão escovado esconde do escuro.",
     description:
       "Açafrão e laranja-amarga acendem uma rosa escura; benjoim, ládano e " +
@@ -125,7 +121,6 @@ export const lines: readonly FragranceLine[] = [
     name: "Maré Clara",
     family: "aquatica",
     familyLabel: "Aquática",
-    lineKey: "mareClara",
     tagline: "Água aberta, sal e distância.",
     description:
       "Um aquático de sal, não de piscina: acorde marinho com toranja na " +
@@ -152,7 +147,6 @@ export const lines: readonly FragranceLine[] = [
     name: "Noturno Absoluto",
     family: "oriental",
     familyLabel: "Coleção noturna",
-    lineKey: "noturnoAbsoluto",
     tagline: "Feito para depois da meia-noite.",
     description:
       "A concentração mais alta da casa. Incenso e couro sobre patchouli e " +
@@ -179,7 +173,6 @@ export const lines: readonly FragranceLine[] = [
     name: "Comum Raro",
     family: "aromatica",
     familyLabel: "Coleção unissex",
-    lineKey: "comumRaro",
     tagline: "O extraordinário disfarçado de cotidiano.",
     description:
       "Sálvia, figo e chá-mate num acorde que lembra roupa limpa e pele — " +

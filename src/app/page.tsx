@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { HeroScene } from "@/3d/HeroScene";
+import { HeroVisual } from "@/3d/HeroVisual";
 import { getLineBySlug, lines } from "@/catalog/lines";
 import { site } from "@/config/site";
 import { LineCard } from "@/ui/LineCard";
@@ -10,6 +10,10 @@ import { LineCard } from "@/ui/LineCard";
  * Home — Server Component (ARCHITECTURE.md §9): todo o texto é HTML servido
  * pelo servidor e indexável; só a cena 3D é cliente. A manchete aparece
  * mesmo se o WebGL falhar e o LCP não depende do Canvas.
+ *
+ * `HeroVisual` sai do servidor já com a imagem estática do hero e só troca
+ * pela cena 3D depois do conteúdo pintar, e apenas em dispositivo capaz —
+ * o three.js fica fora do caminho crítico do LCP.
  */
 export default function Home() {
   const signature = getLineBySlug("comum-raro");
@@ -21,7 +25,7 @@ export default function Home() {
       <section className="relative flex min-h-dvh flex-col justify-center overflow-hidden">
         {/* Camada 3D — decorativa. Todo o conteúdo está no texto abaixo. */}
         <div aria-hidden="true" className="absolute inset-0">
-          <HeroScene lineKey="comumRaro" />
+          <HeroVisual lineKey="comumRaro" />
         </div>
 
         {/* Véu que garante contraste do texto sobre a cena, à esquerda.
@@ -71,7 +75,7 @@ export default function Home() {
 
             {/* Exigência da seção 26 do prompt mestre: conteúdo provisório precisa
                 estar claramente identificado como fictício. */}
-            <p className="mt-14 font-sans text-xs leading-relaxed text-ink-muted/70">
+            <p className="mt-14 font-sans text-xs leading-relaxed text-ink-muted">
               {site.demoNotice}
             </p>
           </div>

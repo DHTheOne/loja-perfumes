@@ -169,7 +169,7 @@ export default async function ColecoesPage({ searchParams }: ColecoesPageProps) 
         </div>
       )}
 
-      <p className="mt-14 font-sans text-xs leading-relaxed text-ink-muted/70">
+      <p className="mt-14 font-sans text-xs leading-relaxed text-ink-muted">
         {site.demoNotice}
       </p>
     </main>

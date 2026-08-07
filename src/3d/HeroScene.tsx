@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useSyncExternalStore } from "react";
-import Image from "next/image";
 import { Canvas } from "@react-three/fiber";
 import {
   Environment,
@@ -10,6 +9,8 @@ import {
 } from "@react-three/drei";
 
 import { Bottle } from "@/3d/Bottle";
+import { HeroFallback } from "@/3d/HeroFallback";
+import { detectWebGL } from "@/lib/device";
 import { lighting, surface, type LineKey } from "@/ui/tokens";
 
 /**
@@ -18,24 +19,20 @@ import { lighting, surface, type LineKey } from "@/ui/tokens";
  * Requisito de ARCHITECTURE.md §9: a loja funciona integralmente sem WebGL e
  * com `prefers-reduced-motion`. A cena nunca bloqueia o conteúdo principal.
  *
+ * Em `prefers-reduced-motion` o retorno é o fallback, não uma cena parada:
+ * o `frameloop` padrão do react-three-fiber continua renderizando mesmo sem
+ * animação, e com ele os passes de MeshTransmissionMaterial e
+ * MeshReflectorMaterial. Manter o Canvas custaria GPU a cada frame para
+ * entregar uma imagem que não se move — exatamente o que o modo pede evitar.
+ *
+ * `HeroVisual` já filtra estes casos antes de montar este componente. A
+ * guarda é repetida aqui de propósito: a cena precisa estar correta por si,
+ * independentemente de quem a monte.
+ *
  * O mapa de ambiente é gerado por Lightformers dentro da própria cena, sem
  * arquivo HDR externo. Isso mantém a página funcional offline e evita uma
  * exceção de CSP para domínio de terceiro (SECURITY_PLAN.md §9).
  */
-
-/** Detecta suporte a WebGL sem manter o contexto de teste vivo. */
-function detectWebGL(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    const canvas = document.createElement("canvas");
-    const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-    if (!gl) return false;
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 /**
  * O suporte a WebGL não muda durante a vida da página, então a detecção é
@@ -46,7 +43,7 @@ function detectWebGL(): boolean {
 let webGLSupport: boolean | null = null;
 
 function getWebGLSnapshot(): boolean {
-  webGLSupport ??= detectWebGL();
+  webGLSupport ??= detectWebGL(document);
   return webGLSupport;
 }
 
@@ -75,19 +72,6 @@ function getReducedMotionServerSnapshot(): boolean {
   return false;
 }
 
-function StaticFallback() {
-  return (
-    <Image
-      src="/media/hero/hero-desktop.jpg"
-      alt="Frasco de perfume em vidro transparente com tampa metálica champanhe, sobre superfície escura polida"
-      fill
-      priority
-      sizes="100vw"
-      className="object-cover object-right"
-    />
-  );
-}
-
 type HeroSceneProps = {
   lineKey?: LineKey;
 };
@@ -105,8 +89,8 @@ export function HeroScene({ lineKey = "comumRaro" }: HeroSceneProps) {
     getWebGLServerSnapshot,
   );
 
-  if (!hasWebGL) {
-    return <StaticFallback />;
+  if (!hasWebGL || prefersReducedMotion) {
+    return <HeroFallback />;
   }
 
   return (
@@ -181,7 +165,7 @@ export function HeroScene({ lineKey = "comumRaro" }: HeroSceneProps) {
           {/* Frasco deslocado para a direita: o terço esquerdo fica livre para
               a manchete, como no hero de referência do lote 01. */}
           <group position={[1.35, 0, 0]} scale={0.78}>
-            <Bottle lineKey={lineKey} isStatic={prefersReducedMotion} />
+            <Bottle lineKey={lineKey} />
           </group>
 
           {/* Superfície polida — o reflexo sob o frasco é metade da leitura

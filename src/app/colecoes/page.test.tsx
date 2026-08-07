@@ -25,7 +25,7 @@ describe("página de coleções", () => {
     expect(screen.queryByText("Lenho Vigil")).not.toBeInTheDocument();
   });
 
-  it("ignora valores desconhecidos de filtro (fail-closed)", async () => {
+  it("ignora valores desconhecidos de filtro e exibe o catalogo completo", async () => {
     render(
       await ColecoesPage(pageProps({ familia: "<script>alert(1)</script>" })),
     );

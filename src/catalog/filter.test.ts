@@ -46,7 +46,7 @@ describe("filterLines", () => {
 });
 
 describe("parsers de parâmetros de URL", () => {
-  it("aceita apenas valores conhecidos (fail-closed)", () => {
+  it("aceita apenas valores da allowlist e ignora o resto", () => {
     expect(parseFamilyParam("floral")?.family).toBe("floral");
     expect(parseFamilyParam("<script>alert(1)</script>")).toBeUndefined();
     expect(parseFamilyParam(undefined)).toBeUndefined();

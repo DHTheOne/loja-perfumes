@@ -1,11 +1,13 @@
-import type { LineKey } from "@/ui/tokens";
-
 /**
  * Modelo do catálogo — versão estática da Fase 2.
  *
  * Espelha os atributos de perfumaria exigidos pelo PROJECT_BRIEF §3 e a
  * estrutura prevista em DATABASE_SCHEMA.md. Quando o Prisma entrar (Fase 5),
  * estes tipos viram o contrato entre o banco e a UI — a UI não muda.
+ *
+ * Este módulo não importa nada de `@/ui` (ARCHITECTURE.md §2): o domínio não
+ * conhece token visual. A cor de vidro de cada linha é derivada do `slug` em
+ * `src/ui/lineVisual.ts`, já na camada de apresentação.
  */
 
 export type OlfactoryFamily =
@@ -44,8 +46,6 @@ export type FragranceLine = {
   family: OlfactoryFamily;
   /** Rótulo da família para exibição, com acentuação correta. */
   familyLabel: string;
-  /** Chave da cor de vidro em src/ui/tokens.ts (`line`). */
-  lineKey: LineKey;
   /** Uma linha editorial — aparece em cards e no topo da página de produto. */
   tagline: string;
   /** Parágrafo de apresentação. */

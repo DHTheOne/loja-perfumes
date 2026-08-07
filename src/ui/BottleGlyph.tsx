@@ -33,9 +33,16 @@ export function BottleGlyph({ lineKey, className }: BottleGlyphProps) {
         style={{ background: metal.champagne }}
       />
       {/* Corpo de vidro. A borda e o brilho especular fazem até o vidro
-          preto do Noturno Absoluto ser legível sobre o fundo escuro. */}
+          preto do Noturno Absoluto ser legível sobre o fundo escuro.
+
+          Posicionado por `top`/`bottom`, não por margem: percentual em
+          `margin-top` resolve contra a LARGURA do contêiner, não a altura.
+          Com `mt-[15%]` num glyph de 112x280 o corpo começava em 16,8px
+          (15% de 112) em vez de 42px (15% de 280) — invadia tampa e colar e
+          sobrava espaço na base. `top-[15%] bottom-0` resolve contra a
+          altura nos dois lados e dispensa o `h-[85%]`. */}
       <div
-        className="relative mt-[15%] h-[85%] w-full rounded-[6px] border border-white/15"
+        className="absolute inset-x-0 bottom-0 top-[15%] rounded-[6px] border border-white/15"
         style={{
           background: `linear-gradient(160deg, ${hexToRgba(glass, 0.85)} 0%, ${hexToRgba(glass, 0.3)} 55%, ${hexToRgba(glass, 0.6)} 100%)`,
           boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.25)",

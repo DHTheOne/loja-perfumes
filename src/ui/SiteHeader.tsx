@@ -40,9 +40,15 @@ export function SiteHeader() {
           <ul className="flex items-center gap-8">
             {navItems.map((item) => (
               <li key={item.href}>
+                {/* `inline-flex` + `py-3.5` levam a área clicável a ~44px de
+                    altura sem alterar o layout: o contêiner tem altura fixa
+                    (h-20) e os itens são centralizados, então o padding cresce
+                    só o alvo de toque. Texto de 12px sem padding deixava o
+                    alvo em ~16px — abaixo dos 24px do WCAG 2.2 SC 2.5.8 e
+                    bem abaixo dos 44px recomendados para dedo. */}
                 <Link
                   href={item.href}
-                  className="font-sans text-xs uppercase tracking-[0.25em] text-ink-muted transition-colors duration-300 hover:text-champagne"
+                  className="inline-flex items-center py-3.5 font-sans text-xs uppercase tracking-[0.25em] text-ink-muted transition-colors duration-300 hover:text-champagne"
                 >
                   {item.label}
                 </Link>

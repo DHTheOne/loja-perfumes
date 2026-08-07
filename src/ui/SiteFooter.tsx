@@ -68,7 +68,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-14 border-t border-white/10 pt-6">
-          <p className="font-sans text-xs leading-relaxed text-ink-muted/70">
+          <p className="font-sans text-xs leading-relaxed text-ink-muted">
             {site.demoNotice}
             {site.isProvisionalName ? " Nome da loja provisório." : null}
           </p>

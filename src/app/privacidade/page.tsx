@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "Política de privacidade",
   description:
     "Minuta da política de privacidade: dados coletados, finalidades, bases legais e direitos do titular conforme a LGPD.",
+  // Minuta sem validade legal: não pode ser indexada antes da revisão
+  // jurídica e da substituição dos placeholders. Ver PROJECT_STATUS (R5).
+  robots: { index: false, follow: false },
 };
 
 /**

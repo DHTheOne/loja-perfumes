@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Página não encontrada",
+  // Uma 404 indexada dilui o site nos resultados de busca sem entregar nada
+  // ao visitante que chegasse por ela.
+  robots: { index: false, follow: true },
+};
 
 /** 404 na direção visual da casa — sempre com um caminho de volta. */
 export default function NotFound() {
