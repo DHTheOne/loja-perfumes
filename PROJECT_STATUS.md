@@ -90,7 +90,7 @@ Saldo necessário se optar pela trilha paga depois: **~500 créditos ≈ R$ 88**
 | R2 | Escopo muito maior que uma entrega curta | Alta | Mitigado por fases |
 | R3 | Gateway de pagamento indefinido | Alta → — | **Resolvido** — Mercado Pago, 2026-08-04 |
 | R4 | Complexidade enterprise vs projeto inicial | Média | Endereçado no ADR-0003 |
-| R5 | Textos legais sem revisão profissional | Média | Sinalizado; permanece aberto até revisão jurídica |
+| R5 | Textos legais sem revisão profissional | Média | Minutas publicadas com banner obrigatório (2026-08-07); aberto até revisão jurídica |
 | R6 | 3D pesado prejudicar mobile | Média | Mitigação arquitetural definida |
 | R7 | Uso comercial da saída das ferramentas de IA não confirmado | Média | **Novo** — checklist em `MEDIA_PLAN.md` §2 |
 | R8 | Nomes de linha fictícios sem busca de anterioridade de marca | Média | **Novo** — obrigatório antes do lançamento |
@@ -123,6 +123,9 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | Páginas `/colecoes`, `/perfumes/[slug]` (SSG) e `/sobre` | Feito (2026-08-07) | `next build`: 13 páginas estáticas |
 | Placeholder programático do frasco (`BottleGlyph`) | Feito (2026-08-07) | Trilha A do MEDIA_PLAN §3, em CSS puro |
 | Verificação visual desktop + mobile (375 px) | Feito (2026-08-07) | Screenshots Playwright no servidor de produção |
+| Filtros por família e ocasião em `/colecoes` | Feito (2026-08-07) | URL como estado; parsers fail-closed testados |
+| Página 404 e minutas legais (`/privacidade`, `/termos`, `/trocas`) | Feito (2026-08-07) | Banner de minuta obrigatório — risco R5 sinalizado no site |
+| Suíte ampliada: 38 testes, cobertura 89,9% st / 91% linhas | Feito (2026-08-07) | `vitest --coverage` (v8); `src/3d` excluído, cobre via E2E |
 
 ### Mídia — lote 01
 
@@ -138,9 +141,9 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 - [ ] Gerar as 6 referências ortográficas (`PROMPTS.md` §12)
 - [ ] Cavidade interna do frasco 3D — exige geometria de casca, não sólido
 - [ ] Testar o fallback num navegador sem WebGL
-- [x] Primeiros testes escritos em 2026-08-07 — 11 testes vitest (integridade
-      do catálogo e utilitário de cor). A meta de 80% de cobertura (seção 28)
-      segue aberta: componentes de UI e cena 3D ainda sem teste
+- [x] Testes em 2026-08-07: 38 testes vitest (catálogo, filtros, componentes
+      e páginas). Cobertura 89,9% de statements / 91% de linhas — meta de 80%
+      (seção 28) atingida no escopo jsdom; `src/3d` e a home ficam para E2E
 
 ## Próximo passo
 
@@ -148,8 +151,8 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
    nomes de linha do `MEDIA_PLAN.md` §5 — agora visíveis no site.
 2. Gerar pela trilha B as imagens por linha (categorias) para substituir o
    `BottleGlyph` nos cards, e regerar o vídeo do hero com o frasco mestre.
-3. Ampliar a cobertura de testes (componentes de UI) rumo aos 80% — a regra
-   da linha 1335 permanece: nenhuma fase fecha sem teste.
+3. Testes E2E (Playwright) para a cena 3D, a home e o fallback sem WebGL —
+   único trecho fora da cobertura atual.
 
 ## Regra de portão
 
