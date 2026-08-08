@@ -1,0 +1,69 @@
+[GLOBAL INVARIANTS]
+Use case: product-mockup.
+The exact bottle geometry in Image 1 is mandatory. Preserve its silhouette, proportions, shoulders, thick base, neck and cylindrical brushed champagne-metal cap. The bottle face remains blank. Change only the glass/liquid appearance, lighting and environment. Never add text, labels, logos, symbols, monograms, watermarks, people or hands. Never replace the bottle with any bottle shown in mood/layout references.
+
+[05 CINEMATIC — FLORA VELADA]
+Asset type: luxury e-commerce landing-page hero.
+Input images: Image 1 is the mandatory master bottle geometry and identity reference. Image 2 is mood and composition reference only; do not copy its bottle, cap, glass color or exact scene.
+Primary request: Create an original photorealistic cinematic product photograph featuring the exact master bottle, with milky translucent opaline glass and a soft ivory liquid that lets light glow through it.
+Scene/backdrop: airy pale ivory environment, smooth warm-white plaster surface, very subtle soft gradient, no decorative objects and no flowers or petals.
+Composition/framing: wide 16:9 frame at 1920 x 1080, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, faint soft contact shadow.
+Lighting/mood: high, diffused veiled daylight from above and the left, luminous serene mood, shallow depth of field.
+Materials/textures: physically plausible milky opaline glass with visible thickness at edges and base, gentle subsurface glow, brushed champagne-metal cap, restrained highlights.
+Constraints: preserve Image 1 geometry exactly; blank bottle face; no text, logo, label, symbol, monogram, watermark, people or hands.
+Avoid: Image 2 bottle geometry, flowers, petals, fabric, botanical props, fully opaque white plastic, blown-out highlights, extra bottles, warped glass, duplicate cap.
+
+[06 CINEMATIC — AMBAR SECRETO]
+Asset type: luxury e-commerce landing-page hero.
+Input images: Image 1 is the mandatory master bottle geometry and identity reference. Image 2 is mood and composition reference only; do not copy its bottle, cap, glass color or exact scene.
+Primary request: Create an original photorealistic cinematic product photograph featuring the exact master bottle, with smoky warm fume glass in a deep topaz-brown tone, clearly warmer and more translucent than black glass.
+Scene/backdrop: deep espresso-brown environment, dark brushed-brass toned surface with a satin sheen, faint warm atmospheric depth, no decorative objects.
+Composition/framing: wide 16:9 frame at 1920 x 1080, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, restrained warm reflection beneath the bottle.
+Lighting/mood: single low dramatic warm side light from the left, narrow amber rim light from behind, secretive opulent mood, shallow depth of field.
+Materials/textures: physically plausible smoky topaz glass, luminous warm edge thickness at base and shoulders, brushed champagne-metal cap, precise controlled highlights.
+Constraints: preserve Image 1 geometry exactly; blank bottle face; no text, logo, label, symbol, monogram, watermark, people or hands.
+Avoid: Image 2 bottle geometry, pitch-black opaque glass identical to a dark collection, gold collar, spice props, smoke clouds, extra bottles, warped glass, duplicate cap, crushed shadows that hide the silhouette.
+
+[07 CINEMATIC — COMUM RARO]
+Asset type: luxury e-commerce landing-page hero.
+Input images: Image 1 is the mandatory master bottle geometry and identity reference. Image 2 is mood and composition reference only; do not copy its bottle, cap, glass tint or exact scene.
+Primary request: Create an original photorealistic cinematic product photograph featuring the exact master bottle, with perfectly colorless neutral glass and a clear liquid, no color cast at all.
+Scene/backdrop: clean neutral mid-gray studio environment, smooth matte concrete surface, precise minimal geometry, no decorative objects.
+Composition/framing: wide 16:9 frame at 1920 x 1080, bottle on the right third, generous clean negative space on the left for website copy, camera near bottle height, crisp minimal contact reflection.
+Lighting/mood: balanced neutral softbox light from the left with a clean neutral rim from behind, precise contemporary unisex mood, shallow depth of field.
+Materials/textures: physically plausible water-clear glass with visible thickness at edges and base, neutral refraction without any yellow or blue cast, brushed champagne-metal cap, controlled highlights.
+Constraints: preserve Image 1 geometry exactly; blank bottle face; no text, logo, label, symbol, monogram, watermark, people or hands.
+Avoid: Image 2 bottle geometry, citrus or golden tint, blue tint, warm color cast, dramatic mood lighting, props, extra bottles, warped glass, duplicate cap.
+
+[05 ORTHOGRAPHIC — FLORA VELADA]
+Asset type: non-dimensional 3D modeling reference sheet.
+Input images: Image 1 is the mandatory master bottle geometry; Image 2 supplies only the approved milky opaline glass/liquid material; Image 3 supplies only the three-view sheet layout. Do not copy the bottle, cap color or reflections from Image 3.
+Primary request: Render one clean square reference sheet containing exactly three separated views of the same exact master bottle: front elevation, right-side elevation and top view.
+Scene/backdrop: uniform neutral mid-gray.
+Style/medium: precise orthographic studio render, not a cinematic photograph.
+Lighting/mood: flat, soft and perfectly even technical lighting with enough transmission to reveal the milky glass boundaries.
+Materials/textures: milky translucent opaline glass with soft ivory liquid and the unchanged brushed champagne-metal cylindrical cap.
+Constraints: identical scale for front and side; orthographic projection; parallel verticals; blank bottle face; no ground plane, cast shadow, reflection, perspective, depth of field, text, label, logo, symbol, dimensions, arrows or watermark.
+Avoid: fully opaque white plastic, three-quarter view, extra view, mismatched proportions between views, Image 3 bottle design, glossy environment reflections.
+
+[06 ORTHOGRAPHIC — AMBAR SECRETO]
+Asset type: non-dimensional 3D modeling reference sheet.
+Input images: Image 1 is the mandatory master bottle geometry; Image 2 supplies only the approved smoky topaz fume glass material; Image 3 supplies only the three-view sheet layout. Do not copy the bottle, cap color or reflections from Image 3.
+Primary request: Render one clean square reference sheet containing exactly three separated views of the same exact master bottle: front elevation, right-side elevation and top view.
+Scene/backdrop: uniform neutral mid-gray.
+Style/medium: precise orthographic studio render, not a cinematic photograph.
+Lighting/mood: flat, soft and perfectly even technical lighting with enough transmission to reveal the warm smoky glass boundaries.
+Materials/textures: smoky warm topaz-brown fume glass with visible edge thickness and the unchanged brushed champagne-metal cylindrical cap.
+Constraints: identical scale for front and side; orthographic projection; parallel verticals; blank bottle face; no ground plane, cast shadow, reflection, perspective, depth of field, text, label, logo, symbol, dimensions, arrows or watermark.
+Avoid: fully opaque plastic, pitch-black glass, three-quarter view, extra view, mismatched proportions between views, Image 3 bottle design, glossy environment reflections.
+
+[07 ORTHOGRAPHIC — COMUM RARO]
+Asset type: non-dimensional 3D modeling reference sheet.
+Input images: Image 1 is the mandatory master bottle geometry; Image 2 supplies only the approved colorless neutral glass material; Image 3 supplies only the three-view sheet layout. Do not copy the bottle, cap color or reflections from Image 3.
+Primary request: Render one clean square reference sheet containing exactly three separated views of the same exact master bottle: front elevation, right-side elevation and top view.
+Scene/backdrop: uniform neutral mid-gray.
+Style/medium: precise orthographic studio render, not a cinematic photograph.
+Lighting/mood: flat, soft and perfectly even technical lighting.
+Materials/textures: water-clear colorless glass with visible edge thickness, clear liquid without any color cast, and the unchanged brushed champagne-metal cylindrical cap.
+Constraints: identical scale for front and side; orthographic projection; parallel verticals; blank bottle face; no ground plane, cast shadow, reflection, perspective, depth of field, text, label, logo, symbol, dimensions, arrows or watermark.
+Avoid: citrus or golden tint, blue tint, three-quarter view, extra view, mismatched proportions between views, Image 3 bottle design, glossy environment reflections.

@@ -176,15 +176,25 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 
 Cobertura por linha do catálogo, em `docs/media/generated/master-bottle-collection-2026-08-07/`:
 
-| Linha | `cinematic/` 1920×1080 | `refs-3d/` 2048×2048 |
+| Linha | `cinematic/` | `refs-3d/` 2048×2048 |
 |---|---|---|
-| `lenho-vigil` | ✔ | ✔ |
-| `alba-citrica` | ✔ | ✔ |
-| `mare-clara` | ✔ | ✔ |
-| `noturno-absoluto` | ✔ | ✔ |
-| `flora-velada` | **falta** | **falta** |
-| `ambar-secreto` | **falta** | **falta** |
-| `comum-raro` | **falta** | **falta** |
+| `lenho-vigil` | ✔ 1920×1080 | ✔ |
+| `alba-citrica` | ✔ 1920×1080 | ✔ |
+| `mare-clara` | ✔ 1920×1080 | ✔ |
+| `noturno-absoluto` | ✔ 1920×1080 | ✔ |
+| `flora-velada` | ✔ 1920×1080 (2026-08-07) | **falta** |
+| `ambar-secreto` | ✔ 1672×941 (2026-08-07) | **falta** |
+| `comum-raro` | ✔ 1672×941 (2026-08-07) | **falta** |
+
+Cinematográficas completas nas 7 linhas. As 3 novas foram geradas via ChatGPT
+(GPT Image), usando `_master-bottle.png` como referência de geometria; prompts
+em `prompts/generation-prompts-lines-05-07.txt`. Âmbar e Comum Raro saíram a
+1672×941 (maior resolução acessível pela página do ChatGPT no momento), não
+1920×1080 — pendência menor de uniformização, não bloqueia uso.
+
+Faltam as 3 folhas ortográficas (`refs-3d/`) de flora-velada, ambar-secreto e
+comum-raro — material técnico de modelagem 3D, prompts já prontos no mesmo
+arquivo. Deixadas para outra sessão por decisão do proprietário (custo).
 
 Os originais de referência em `docs/media/source/` (3 arquivos, ~5 MB, entre
 eles `_master-bottle.png`) seguem **fora do Git por política** (MEDIA_PLAN §8)
