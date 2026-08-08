@@ -176,25 +176,28 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 
 Cobertura por linha do catálogo, em `docs/media/generated/master-bottle-collection-2026-08-07/`:
 
-| Linha | `cinematic/` | `refs-3d/` 2048×2048 |
+| Linha | `cinematic/` | `refs-3d/` |
 |---|---|---|
-| `lenho-vigil` | ✔ 1920×1080 | ✔ |
-| `alba-citrica` | ✔ 1920×1080 | ✔ |
-| `mare-clara` | ✔ 1920×1080 | ✔ |
-| `noturno-absoluto` | ✔ 1920×1080 | ✔ |
-| `flora-velada` | ✔ 1920×1080 (2026-08-07) | **falta** |
-| `ambar-secreto` | ✔ 1672×941 (2026-08-07) | **falta** |
-| `comum-raro` | ✔ 1672×941 (2026-08-07) | **falta** |
+| `lenho-vigil` | ✔ 1920×1080 | ✔ 2048×2048 |
+| `alba-citrica` | ✔ 1920×1080 | ✔ 2048×2048 |
+| `mare-clara` | ✔ 1920×1080 | ✔ 2048×2048 |
+| `noturno-absoluto` | ✔ 1920×1080 | ✔ 2048×2048 |
+| `flora-velada` | ✔ 1920×1080 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
+| `ambar-secreto` | ✔ 1672×941 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
+| `comum-raro` | ✔ 1672×941 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
 
-Cinematográficas completas nas 7 linhas. As 3 novas foram geradas via ChatGPT
-(GPT Image), usando `_master-bottle.png` como referência de geometria; prompts
-em `prompts/generation-prompts-lines-05-07.txt`. Âmbar e Comum Raro saíram a
-1672×941 (maior resolução acessível pela página do ChatGPT no momento), não
-1920×1080 — pendência menor de uniformização, não bloqueia uso.
+**Conjunto completo: 7 linhas com cinematográfica + folha ortográfica.**
 
-Faltam as 3 folhas ortográficas (`refs-3d/`) de flora-velada, ambar-secreto e
-comum-raro — material técnico de modelagem 3D, prompts já prontos no mesmo
-arquivo. Deixadas para outra sessão por decisão do proprietário (custo).
+As 6 imagens novas (3 cinematográficas + 3 ortográficas) foram geradas via
+ChatGPT (GPT Image), usando `_master-bottle.png` como referência de geometria
+e uma folha ortográfica existente como referência de layout de três vistas;
+prompts em `prompts/generation-prompts-lines-05-07.txt`.
+
+Ressalva de resolução (pendência menor, não bloqueia uso): as imagens geradas
+nesta sessão saíram menores que as originais do time — cinematográficas de
+Âmbar e Comum Raro a 1672×941 (vs 1920×1080), e as 3 ortográficas novas a
+1254×1254 (vs 2048×2048) — por ser a maior resolução que a página do ChatGPT
+liberou. Uniformizar é opcional.
 
 Os originais de referência em `docs/media/source/` (3 arquivos, ~5 MB, entre
 eles `_master-bottle.png`) seguem **fora do Git por política** (MEDIA_PLAN §8)
