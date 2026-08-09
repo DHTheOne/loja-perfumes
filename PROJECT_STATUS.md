@@ -136,6 +136,8 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | JSON-LD `schema.org/Product` nas 7 páginas de produto | Feito (2026-08-09) | Preço, moeda e `PreOrder` — vendas não abriram, anunciar `InStock` seria declarar estoque inexistente |
 | `theme-color` + `colorScheme: dark` | Feito (2026-08-09) | A barra do Chrome no Android abria clara sobre a página escura |
 | Testes de regressão de Open Graph | Feito (2026-08-09) | 8 casos novos em `seo.test.ts` (77 → 85). Verificados por reintrodução da falha: o teste fica vermelho |
+| Favicon próprio | Feito (2026-08-09) | Era o padrão do `create-next-app` (logo do Next.js) desde o scaffold. Trocado pela silhueta do frasco em champanhe sobre `--surface-void`, nas proporções do `BottleGlyph`: `src/app/icon.svg` + `src/app/favicon.ico` (16/32/48/64 px). Legibilidade conferida renderizando a 16 px |
+| Lint limpo no projeto inteiro | Feito (2026-08-09) | `npm run lint` acusava aviso em `coverage/block-navigation.js`, JS de terceiros do relatório do v8. O `eslint.config.mjs` é protegido por hook, então a exclusão foi para o script: `--ignore-pattern` para `coverage`, `test-results` e `playwright-report`. Os configs da raiz continuam sendo verificados |
 
 ### Mídia — lote 01
 
@@ -161,13 +163,13 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 
 1. Proprietário aprova (ou substitui) o wordmark provisório "Sillage" e os
    nomes de linha do `MEDIA_PLAN.md` §5 — agora visíveis no site.
-2. **Regerar a cinematográfica da `flora-velada`** (a atual é duplicata — ver
-   correção acima) e só então substituir o `BottleGlyph` nos cards pelas
-   imagens por linha. As 6 imagens boas seguem em `docs/media/generated/` e
-   **ainda não são servidas pelo site**: falta convertê-las para WebP/AVIF em
-   tamanhos web, movê-las para `public/media/lines/` e ligá-las em `LineCard`
-   e na página de produto. Regerar depende das contas do proprietário
-   (ChatGPT Plus / Google AI Pro), por isso a integração está parada em 6/7.
+2. **Integrar as 7 cinematográficas ao site** — destravado em 2026-08-09 com a
+   regeração da Flora Velada. As 7 estão em `docs/media/generated/` e **ainda
+   não são servidas**: falta convertê-las para WebP/AVIF em tamanhos web,
+   movê-las para `public/media/lines/` e ligá-las em `LineCard` e na página de
+   produto, substituindo o `BottleGlyph`. Vale também trocar a imagem social
+   por página de produto pela imagem da própria linha (hoje todas usam o hero;
+   ver `socialImage` em `src/config/site.ts`).
 3. Regerar o vídeo do hero com o frasco mestre.
 4. ~~Integrar a branch `feat/media-master-bottle`~~ **Feito em 2026-08-07**:
    squash merge no commit `ba10ee3` (9 arquivos — 8 PNG + manifesto de
@@ -176,7 +178,19 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
    A branch e o worktree `.worktrees/media-master-bottle` podem ser removidos
    quando o proprietário quiser — todo o conteúdo já está na
    `feat/loja-perfumes`.
-5. **Backup externo de `docs/media/source/`** — 77 arquivos, ~380 MB fora do
+5. ~~**Backup de `docs/media/source/`**~~ — **parcialmente resolvido em
+   2026-08-09**. Cópia verificada em
+   `D:\backups\loja-perfumes\media-source-2026-08-09`: 74 arquivos, 375,2 MB,
+   os 74 conferidos por SHA-1 contra a origem, zero divergências. O `D:` é
+   **disco físico distinto** do `C:` (`Get-Partition`: disco 0 = WDC SATA SSD
+   223 GB com o `C:`; disco 1 = WD Green SN350 NVMe 1 TB com o `D:`), então a
+   falha de disco único — o risco que estava registrado — deixou de existir.
+   **Continua pendente cópia externa à máquina**: incêndio, furto, ransomware
+   ou erro humano ainda atingiriam as duas cópias. Decisão do proprietário
+   sobre nuvem, disco removível ou object storage. O texto original do risco
+   segue abaixo para rastreabilidade.
+
+   Texto original: **Backup externo de `docs/media/source/`** — 77 arquivos, ~380 MB fora do
    Git por política (MEDIA_PLAN §8), sem nenhuma cópia em outro lugar:
    originais do lote 01, upscales 4K (255 MB), vídeos e o `_master-bottle.png`.
    Disco único é hoje o maior risco de perda do projeto. Decisão do
@@ -193,21 +207,34 @@ Cobertura por linha do catálogo, em `docs/media/generated/master-bottle-collect
 | `alba-citrica` | ✔ 1920×1080 | ✔ 2048×2048 |
 | `mare-clara` | ✔ 1920×1080 | ✔ 2048×2048 |
 | `noturno-absoluto` | ✔ 1920×1080 | ✔ 2048×2048 |
-| `flora-velada` | ✗ **duplicata** de `lenho-vigil` | ✔ 1254×1254 (2026-08-07) |
+| `flora-velada` | ✔ 1672×941 (**regerada** 2026-08-09) | ✔ 1254×1254 (2026-08-07) |
 | `ambar-secreto` | ✔ 1672×941 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
 | `comum-raro` | ✔ 1672×941 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
 
-**Conjunto real: 6 cinematográficas distintas + 7 folhas ortográficas.**
+**Conjunto completo: 7 cinematográficas distintas + 7 folhas ortográficas.**
 
-Correção de 2026-08-09: a linha da `flora-velada` afirmava cinematográfica
-entregue em 1920×1080. A verificação por pixel mostrou que
-`cinematic/05-flora-velada.png` é **a mesma imagem** de
-`cinematic/01-lenho-vigil.png` — diferença média 0,00 em RGB e tom médio
-idêntico (`rgb(46, 29, 18)`), âmbar amadeirado. Os bytes diferem só por
-recompressão (2,94 MB contra 1,79 MB), por isso o hash não denunciou. Flora
-Velada é a linha **floral**, de vidro rosado: publicar essa imagem mostraria o
-frasco errado na página do produto. As 7 folhas ortográficas foram conferidas
-pelo mesmo método e são todas distintas.
+### Duplicata da Flora Velada — detectada e corrigida em 2026-08-09
+
+A tabela afirmava cinematográfica entregue em 1920×1080. A comparação por
+pixel mostrou que `cinematic/05-flora-velada.png` era **a mesma imagem** de
+`cinematic/01-lenho-vigil.png`: diferença média 0,00 em RGB, tom médio
+idêntico (`rgb(46, 29, 18)`), âmbar amadeirado. Os bytes diferiam só por
+recompressão (2,94 MB contra 1,79 MB) — por isso o hash não denunciou e o
+registro passou como entregue. Flora Velada é a linha **floral**: publicar
+aquela imagem mostraria o frasco errado na página do produto.
+
+**Causa provável.** O prompt original mandava usar uma "Imagem 2" como
+referência de clima e composição. Com uma cinematográfica pronta nesse papel,
+o modelo devolveu a própria referência em vez de compor uma cena nova.
+
+**Correção.** Regerada em 2026-08-09 usando **apenas** `_master-bottle.png`
+como referência, sem segunda imagem, e com instrução explícita proibindo
+devolver imagem anterior. Resultado: 1672×941, tom médio `rgb(229, 218, 205)`
+— marfim claro, vidro opalino leitoso, contra `rgb(46, 29, 18)` da âmbar.
+
+**Verificação.** O detector compara todos os 21 pares das 7 imagens após
+normalizá-las para 160×160: nenhum par abaixo do limiar. As 7 folhas
+ortográficas passaram pelo mesmo teste e também são distintas.
 
 Das 6 imagens tidas como novas em 2026-08-07 (3 cinematográficas + 3
 ortográficas), **5 são de fato novas**: as cinematográficas de Âmbar Secreto e
