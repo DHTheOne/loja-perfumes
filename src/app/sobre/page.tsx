@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { site } from "@/config/site";
+import { openGraphFor, site } from "@/config/site";
+
+const pageDescription =
+  "A casa, o frasco único e o processo: composição, maceração e engarrafamento em lotes numerados.";
 
 export const metadata: Metadata = {
   title: "Sobre",
-  description:
-    "A casa, o frasco único e o processo: composição, maceração e engarrafamento em lotes numerados.",
+  description: pageDescription,
+  alternates: { canonical: "/sobre" },
+  openGraph: openGraphFor({
+    url: "/sobre",
+    title: `Sobre — ${site.name}`,
+    description: pageDescription,
+  }),
 };
 
 /** Sequência real de produção — a numeração carrega informação de ordem. */

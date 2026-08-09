@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
 import { siteOrigin } from "@/config/origin";
-import { site } from "@/config/site";
+import { site, socialImage } from "@/config/site";
 import { SiteHeader } from "@/ui/SiteHeader";
 import { SiteFooter } from "@/ui/SiteFooter";
 
@@ -32,8 +32,41 @@ export const metadata: Metadata = {
     default: `${site.name} — ${site.tagline}`,
     template: `%s — ${site.name}`,
   },
-  description:
-    "Fragrâncias originais em edição limitada. Catálogo de demonstração; todas as fragrâncias são fictícias.",
+  description: site.description,
+  // Cartão de compartilhamento. Cada página herda estes valores e sobrescreve
+  // título, descrição e `url` — o Next resolve as rotas relativas contra a
+  // `metadataBase` acima. Sem este bloco, colar o link em qualquer rede social
+  // produz um retângulo vazio.
+  //
+  // NÃO se aplica `alternates.canonical` aqui: no App Router os filhos herdam
+  // o valor, e uma canonical "/" herdada por /colecoes e pelas 7 páginas de
+  // produto as apagaria dos resultados de busca. A canonical é declarada por
+  // página.
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: site.name,
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+    images: [socialImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+    images: [socialImage.url],
+  },
+};
+
+/**
+ * Pinta a barra do navegador móvel com o fundo do site. Sem isso o Chrome no
+ * Android abre a página escura sob uma barra clara — a emenda aparece já no
+ * primeiro frame. `colorScheme` avisa o navegador que não há tema claro, o
+ * que também acerta a cor de formulários e barras de rolagem nativas.
+ */
+export const viewport: Viewport = {
+  themeColor: "#0a0908",
+  colorScheme: "dark",
 };
 
 type RootLayoutProps = Readonly<{ children: ReactNode }>;

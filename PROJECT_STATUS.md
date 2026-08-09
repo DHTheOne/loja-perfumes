@@ -131,6 +131,11 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | Desacoplamento catálogo → UI (ARCHITECTURE §2) | Feito (2026-08-07) | `lineKey` saiu de `FragranceLine`; mapa slug → vidro em `src/ui/lineVisual.ts` |
 | `robots.txt`, `sitemap.xml` e `metadataBase` | Feito (2026-08-07) | Minutas com `noindex` + `disallow`, fora do sitemap; invariante travado em `seo.test.ts` |
 | Revisão do relatório 2026-08-07 — itens ALTA, MÉDIA e BAIXA | Feito (2026-08-07) | 8/8 itens tratados; ver seção "Riscos" para o que segue aberto |
+| Cartão de compartilhamento (Open Graph + Twitter) | Feito (2026-08-09) | Não existia nenhuma tag: o link do site era publicado sem imagem e sem título em WhatsApp, Instagram, X e LinkedIn. `openGraphFor()` em `src/config/site.ts` monta o bloco; conferido por `curl` nas 5 rotas |
+| `canonical` por página | Feito (2026-08-09) | `/colecoes` tinha as combinações de filtro competindo entre si como URLs distintas do mesmo catálogo |
+| JSON-LD `schema.org/Product` nas 7 páginas de produto | Feito (2026-08-09) | Preço, moeda e `PreOrder` — vendas não abriram, anunciar `InStock` seria declarar estoque inexistente |
+| `theme-color` + `colorScheme: dark` | Feito (2026-08-09) | A barra do Chrome no Android abria clara sobre a página escura |
+| Testes de regressão de Open Graph | Feito (2026-08-09) | 8 casos novos em `seo.test.ts` (77 → 85). Verificados por reintrodução da falha: o teste fica vermelho |
 
 ### Mídia — lote 01
 
@@ -156,16 +161,22 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 
 1. Proprietário aprova (ou substitui) o wordmark provisório "Sillage" e os
    nomes de linha do `MEDIA_PLAN.md` §5 — agora visíveis no site.
-2. Gerar pela trilha B as imagens por linha (categorias) para substituir o
-   `BottleGlyph` nos cards, e regerar o vídeo do hero com o frasco mestre.
-3. ~~Integrar a branch `feat/media-master-bottle`~~ **Feito em 2026-08-07**:
+2. **Regerar a cinematográfica da `flora-velada`** (a atual é duplicata — ver
+   correção acima) e só então substituir o `BottleGlyph` nos cards pelas
+   imagens por linha. As 6 imagens boas seguem em `docs/media/generated/` e
+   **ainda não são servidas pelo site**: falta convertê-las para WebP/AVIF em
+   tamanhos web, movê-las para `public/media/lines/` e ligá-las em `LineCard`
+   e na página de produto. Regerar depende das contas do proprietário
+   (ChatGPT Plus / Google AI Pro), por isso a integração está parada em 6/7.
+3. Regerar o vídeo do hero com o frasco mestre.
+4. ~~Integrar a branch `feat/media-master-bottle`~~ **Feito em 2026-08-07**:
    squash merge no commit `ba10ee3` (9 arquivos — 8 PNG + manifesto de
    prompts, 8/8 hashes conferidos com `4e40268`). O `--squash` deixou de fora
    os 4 commits vazios da branch (`81b0742`, `b6e7299`, `fdf672b`, `2262e96`).
    A branch e o worktree `.worktrees/media-master-bottle` podem ser removidos
    quando o proprietário quiser — todo o conteúdo já está na
    `feat/loja-perfumes`.
-4. **Backup externo de `docs/media/source/`** — 77 arquivos, ~380 MB fora do
+5. **Backup externo de `docs/media/source/`** — 77 arquivos, ~380 MB fora do
    Git por política (MEDIA_PLAN §8), sem nenhuma cópia em outro lugar:
    originais do lote 01, upscales 4K (255 MB), vídeos e o `_master-bottle.png`.
    Disco único é hoje o maior risco de perda do projeto. Decisão do
@@ -182,16 +193,29 @@ Cobertura por linha do catálogo, em `docs/media/generated/master-bottle-collect
 | `alba-citrica` | ✔ 1920×1080 | ✔ 2048×2048 |
 | `mare-clara` | ✔ 1920×1080 | ✔ 2048×2048 |
 | `noturno-absoluto` | ✔ 1920×1080 | ✔ 2048×2048 |
-| `flora-velada` | ✔ 1920×1080 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
+| `flora-velada` | ✗ **duplicata** de `lenho-vigil` | ✔ 1254×1254 (2026-08-07) |
 | `ambar-secreto` | ✔ 1672×941 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
 | `comum-raro` | ✔ 1672×941 (2026-08-07) | ✔ 1254×1254 (2026-08-07) |
 
-**Conjunto completo: 7 linhas com cinematográfica + folha ortográfica.**
+**Conjunto real: 6 cinematográficas distintas + 7 folhas ortográficas.**
 
-As 6 imagens novas (3 cinematográficas + 3 ortográficas) foram geradas via
-ChatGPT (GPT Image), usando `_master-bottle.png` como referência de geometria
-e uma folha ortográfica existente como referência de layout de três vistas;
-prompts em `prompts/generation-prompts-lines-05-07.txt`.
+Correção de 2026-08-09: a linha da `flora-velada` afirmava cinematográfica
+entregue em 1920×1080. A verificação por pixel mostrou que
+`cinematic/05-flora-velada.png` é **a mesma imagem** de
+`cinematic/01-lenho-vigil.png` — diferença média 0,00 em RGB e tom médio
+idêntico (`rgb(46, 29, 18)`), âmbar amadeirado. Os bytes diferem só por
+recompressão (2,94 MB contra 1,79 MB), por isso o hash não denunciou. Flora
+Velada é a linha **floral**, de vidro rosado: publicar essa imagem mostraria o
+frasco errado na página do produto. As 7 folhas ortográficas foram conferidas
+pelo mesmo método e são todas distintas.
+
+Das 6 imagens tidas como novas em 2026-08-07 (3 cinematográficas + 3
+ortográficas), **5 são de fato novas**: as cinematográficas de Âmbar Secreto e
+Comum Raro e as 3 folhas ortográficas. A sexta — a cinematográfica de Flora
+Velada — é a duplicata descrita acima. Todas foram geradas via ChatGPT (GPT
+Image), usando `_master-bottle.png` como referência de geometria e uma folha
+ortográfica existente como referência de layout de três vistas; prompts em
+`prompts/generation-prompts-lines-05-07.txt`.
 
 Ressalva de resolução (pendência menor, não bloqueia uso): as imagens geradas
 nesta sessão saíram menores que as originais do time — cinematográficas de

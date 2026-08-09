@@ -1,10 +1,20 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import { HeroVisual } from "@/3d/HeroVisual";
 import { getLineBySlug, lines } from "@/catalog/lines";
-import { site } from "@/config/site";
+import { openGraphFor, site } from "@/config/site";
 import { LineCard } from "@/ui/LineCard";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: openGraphFor({
+    url: "/",
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+  }),
+};
 
 /**
  * Home — Server Component (ARCHITECTURE.md §9): todo o texto é HTML servido

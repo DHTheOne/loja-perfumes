@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { formatPriceBRL, getLineBySlug, lines } from "@/catalog/lines";
-import { site } from "@/config/site";
+import { openGraphFor, site } from "@/config/site";
 import { BottleGlyph } from "@/ui/BottleGlyph";
 import { hexToRgba } from "@/ui/color";
 import { glassColorForSlug, lineKeyForSlug } from "@/ui/lineVisual";
@@ -21,9 +21,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const fragrance = getLineBySlug(slug);
   if (!fragrance) return {};
+  const description = `${fragrance.tagline} ${fragrance.familyLabel}, ${fragrance.concentration}.`;
   return {
     title: fragrance.name,
-    description: `${fragrance.tagline} ${fragrance.familyLabel}, ${fragrance.concentration}.`,
+    description,
+    alternates: { canonical: `/perfumes/${fragrance.slug}` },
+    // O `type` fica em "website": o Next só aceita os tipos do OG core. A
+    // semântica de produto vai no JSON-LD do corpo da página, que é o que os
+    // buscadores leem para preço e disponibilidade.
+    openGraph: openGraphFor({
+      url: `/perfumes/${fragrance.slug}`,
+      title: `${fragrance.name} — ${site.name}`,
+      description,
+    }),
   };
 }
 
@@ -55,12 +65,49 @@ export default async function PerfumePage({ params }: PageProps) {
   const glass = glassColorForSlug(fragrance.slug);
   const seasonsLabel = fragrance.seasons.join(" · ");
 
+  /**
+   * Dados estruturados de produto (schema.org/Product).
+   *
+   * É o que permite ao buscador exibir preço e disponibilidade junto do
+   * resultado, em vez de só título e descrição. `availability: PreOrder`
+   * e `demoNotice` mantêm a página honesta: o catálogo é fictício e as
+   * vendas ainda não abriram — anunciar `InStock` seria declarar ao Google
+   * um estoque que não existe.
+   */
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: fragrance.name,
+    description: fragrance.description,
+    category: fragrance.familyLabel,
+    brand: { "@type": "Brand", name: site.name },
+    disambiguatingDescription: site.demoNotice,
+    offers: fragrance.volumes.map((volume) => ({
+      "@type": "Offer",
+      name: `${volume.ml} ml`,
+      price: (volume.priceCents / 100).toFixed(2),
+      priceCurrency: "BRL",
+      availability: "https://schema.org/PreOrder",
+    })),
+  };
+
   return (
     <main
       id="conteudo"
       className="mx-auto w-full max-w-7xl px-6 pt-32 md:px-12"
       style={{ paddingBottom: "var(--space-section)" }}
     >
+      {/* Os valores vêm do catálogo estático do repositório, não de entrada de
+          usuário. Ainda assim todo sinal de menor-que é reescrito na forma de
+          escape unicode do JSON: é o que impede que uma tag de fechamento de
+          script dentro de um texto do catálogo encerre este bloco antes da
+          hora e jogue o resto do JSON no HTML como marcação. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <Link
         href="/colecoes"
         className="font-sans text-sm text-ink-muted transition-colors duration-300 hover:text-champagne"

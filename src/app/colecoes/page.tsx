@@ -9,13 +9,24 @@ import {
   parseOccasionParam,
 } from "@/catalog/filter";
 import { lines } from "@/catalog/lines";
-import { site } from "@/config/site";
+import { openGraphFor, site } from "@/config/site";
 import { LineCard } from "@/ui/LineCard";
+
+const pageDescription =
+  "As sete linhas da casa: amadeirada, cítrica, floral, oriental, aquática e as coleções noturna e unissex. Fragrâncias originais em série limitada.";
 
 export const metadata: Metadata = {
   title: "Coleções",
-  description:
-    "As sete linhas da casa: amadeirada, cítrica, floral, oriental, aquática e as coleções noturna e unissex. Fragrâncias originais em série limitada.",
+  description: pageDescription,
+  // Canonical sem query: /colecoes?familia=floral&ocasiao=noite e as demais
+  // combinações de filtro servem o mesmo catálogo em ordens diferentes. Sem
+  // esta linha, cada combinação vira uma URL concorrente do mesmo conteúdo.
+  alternates: { canonical: "/colecoes" },
+  openGraph: openGraphFor({
+    url: "/colecoes",
+    title: `Coleções — ${site.name}`,
+    description: pageDescription,
+  }),
 };
 
 type ColecoesPageProps = {
