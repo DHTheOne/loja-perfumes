@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+import { ProductVisual } from "@/3d/ProductVisual";
 
 import { getLineBySlug, lines } from "@/catalog/lines";
 import { openGraphFor, site } from "@/config/site";
@@ -135,19 +136,13 @@ export default async function PerfumePage({ params }: PageProps) {
         {/* ——— Visual ——— */}
         <div className="relative self-start overflow-hidden rounded-2xl border border-white/10 bg-raised lg:sticky lg:top-28">
           {media ? (
-            <Image
-              src={media.src}
+            /* A fotografia sai do servidor e é o LCP; a cena 3D entra no
+               lugar dela depois, e só onde o cliente aguenta. Ver
+               ProductVisual. */
+            <ProductVisual
+              media={media}
               alt={lineMediaAlt(fragrance.name, fragrance.familyLabel)}
-              width={media.width}
-              height={media.height}
-              placeholder="blur"
-              blurDataURL={media.blurDataURL}
-              /* Prioridade alta: num viewport de produto esta imagem é o LCP.
-                 Deixá-la em lazy adiaria o próprio elemento que define a
-                 métrica. */
-              priority
-              sizes="(min-width: 1024px) 42vw, 92vw"
-              className="h-auto w-full"
+              lineKey={lineKeyForSlug(fragrance.slug)}
             />
           ) : (
             <>
