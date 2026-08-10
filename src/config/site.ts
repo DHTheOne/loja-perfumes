@@ -42,11 +42,26 @@ export const socialImage = {
   alt: "Frasco de perfume em vidro transparente com tampa metálica champanhe, iluminado sobre fundo escuro",
 } as const;
 
+/** Formato mínimo que o bloco Open Graph aceita como imagem. */
+export type SocialImage = {
+  url: string;
+  width: number;
+  height: number;
+  alt: string;
+};
+
 type OpenGraphInput = {
   /** Caminho da rota, resolvido contra `metadataBase`. Ex.: "/colecoes". */
   url: string;
   title: string;
   description: string;
+  /**
+   * Imagem própria da página. Sem ela vale o hero (`socialImage`), que é o
+   * certo para as rotas institucionais. A página de produto passa a foto da
+   * própria linha: compartilhar sete fragrâncias diferentes com o mesmo
+   * frasco esvazia o cartão de informação.
+   */
+  image?: SocialImage;
 };
 
 /**
@@ -62,6 +77,7 @@ export function openGraphFor({
   url,
   title,
   description,
+  image,
 }: OpenGraphInput): NonNullable<Metadata["openGraph"]> {
   return {
     type: "website",
@@ -69,7 +85,7 @@ export function openGraphFor({
     siteName: site.name,
     // Cópia rasa: `socialImage` é `as const`, e o tipo do Next exige um array
     // mutável de imagens.
-    images: [{ ...socialImage }],
+    images: [{ ...(image ?? socialImage) }],
     url,
     title,
     description,

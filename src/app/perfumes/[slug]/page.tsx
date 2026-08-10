@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -6,6 +7,7 @@ import { formatPriceBRL, getLineBySlug, lines } from "@/catalog/lines";
 import { openGraphFor, site } from "@/config/site";
 import { BottleGlyph } from "@/ui/BottleGlyph";
 import { hexToRgba } from "@/ui/color";
+import { lineMediaAlt, lineMediaForSlug } from "@/ui/lineMedia";
 import { glassColorForSlug, lineKeyForSlug } from "@/ui/lineVisual";
 
 /** Catálogo estático na Fase 2 → todas as páginas saem no build. */
@@ -22,6 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const fragrance = getLineBySlug(slug);
   if (!fragrance) return {};
   const description = `${fragrance.tagline} ${fragrance.familyLabel}, ${fragrance.concentration}.`;
+  const media = lineMediaForSlug(fragrance.slug);
   return {
     title: fragrance.name,
     description,
@@ -33,6 +36,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `/perfumes/${fragrance.slug}`,
       title: `${fragrance.name} — ${site.name}`,
       description,
+      // Cada produto compartilha a própria fragrância. Sem isto as sete
+      // páginas publicariam o mesmo frasco do hero, e o cartão deixaria de
+      // distinguir o que está sendo compartilhado.
+      image: media
+        ? {
+            url: media.src,
+            width: media.width,
+            height: media.height,
+            alt: lineMediaAlt(fragrance.name, fragrance.familyLabel),
+          }
+        : undefined,
     }),
   };
 }
@@ -63,6 +77,7 @@ export default async function PerfumePage({ params }: PageProps) {
   if (!fragrance) notFound();
 
   const glass = glassColorForSlug(fragrance.slug);
+  const media = lineMediaForSlug(fragrance.slug);
   const seasonsLabel = fragrance.seasons.join(" · ");
 
   /**
@@ -116,21 +131,40 @@ export default async function PerfumePage({ params }: PageProps) {
       </Link>
 
       <div className="mt-10 grid gap-14 lg:grid-cols-[5fr_7fr]">
-        {/* ——— Visual — placeholder programático até a mídia final ——— */}
+        {/* ——— Visual ——— */}
         <div className="relative self-start overflow-hidden rounded-2xl border border-white/10 bg-raised lg:sticky lg:top-28">
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(110% 80% at 50% 0%, ${hexToRgba(glass, 0.35)} 0%, transparent 65%)`,
-            }}
-          />
-          <div className="relative flex aspect-[4/5] items-center justify-center">
-            <BottleGlyph
-              lineKey={lineKeyForSlug(fragrance.slug)}
-              className="aspect-[2/5] w-28 md:w-36"
+          {media ? (
+            <Image
+              src={media.src}
+              alt={lineMediaAlt(fragrance.name, fragrance.familyLabel)}
+              width={media.width}
+              height={media.height}
+              placeholder="blur"
+              blurDataURL={media.blurDataURL}
+              /* Prioridade alta: num viewport de produto esta imagem é o LCP.
+                 Deixá-la em lazy adiaria o próprio elemento que define a
+                 métrica. */
+              priority
+              sizes="(min-width: 1024px) 42vw, 92vw"
+              className="h-auto w-full"
             />
-          </div>
+          ) : (
+            <>
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  background: `radial-gradient(110% 80% at 50% 0%, ${hexToRgba(glass, 0.35)} 0%, transparent 65%)`,
+                }}
+              />
+              <div className="relative flex aspect-[4/5] items-center justify-center">
+                <BottleGlyph
+                  lineKey={lineKeyForSlug(fragrance.slug)}
+                  className="aspect-[2/5] w-28 md:w-36"
+                />
+              </div>
+            </>
+          )}
         </div>
 
         {/* ——— Informação ——— */}

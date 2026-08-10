@@ -8,6 +8,7 @@ import sitemap from "@/app/sitemap";
 import { metadata as sobreMetadata } from "@/app/sobre/page";
 import { lines } from "@/catalog/lines";
 import { socialImage } from "@/config/site";
+import { lineMediaForSlug } from "@/ui/lineMedia";
 
 /**
  * Estes testes existem pelo risco, não pela cobertura.
@@ -104,11 +105,37 @@ describe("cartão de compartilhamento (Open Graph)", () => {
       const openGraph = await perfumeOpenGraph(fragrance.slug);
       const images = openGraph?.images;
 
+      // A imagem do produto é a da própria linha, não mais o hero: as sete
+      // páginas compartilhavam o mesmo frasco, e o cartão não distinguia o
+      // que estava sendo publicado.
       expect(Array.isArray(images) ? images : []).toContainEqual(
-        expect.objectContaining({ url: socialImage.url }),
+        expect.objectContaining({
+          url: lineMediaForSlug(fragrance.slug)?.src,
+        }),
       );
       expect(openGraph?.url).toBe(`/perfumes/${fragrance.slug}`);
     }
+  });
+
+  /**
+   * O invariante que a duplicata da Flora Velada violou em 2026-08-07 e que
+   * passou despercebido até a comparação por pixel: duas linhas anunciando a
+   * mesma imagem. Aqui ele é verificado no nível do que o site publica.
+   */
+  it("produtos distintos anunciam imagens sociais distintas", async () => {
+    const urls = await Promise.all(
+      lines.map(async (fragrance) => {
+        const openGraph = await perfumeOpenGraph(fragrance.slug);
+        const images = openGraph?.images;
+        const first = Array.isArray(images) ? images[0] : undefined;
+        return typeof first === "object" && first !== null && "url" in first
+          ? String(first.url)
+          : undefined;
+      }),
+    );
+
+    expect(urls.every(Boolean)).toBe(true);
+    expect(new Set(urls).size).toBe(lines.length);
   });
 
   it("cada produto tem canonical distinta, apontando para si", async () => {
