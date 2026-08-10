@@ -61,6 +61,41 @@ body {
   animation: rise var(--duration-slow) var(--ease-out-expo) both;
 }
 
+/* Revelação ao rolar — só transform e opacity, dirigida pela posição do
+   elemento no viewport (animation-timeline: view()), sem JavaScript.
+
+   Progressiva por construção: navegador sem suporte ignora o bloco @supports
+   e mostra o conteúdo estático — nada fica escondido à espera de script.
+   Elemento que já nasce dentro do viewport começa além do trecho de entrada
+   e aparece pronto, então o above-the-fold nunca pisca.
+
+   O gate de movimento reduzido é explícito e não reaproveita o kill-switch
+   global: aquele zera animation-duration, mas animação por timeline de
+   rolagem não tem duração — o progresso vem do scroll — e sobreviveria a
+   ele. Sob reduce, este bloco inteiro deixa de existir. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    @keyframes scroll-reveal {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 1.25rem, 0);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .scroll-reveal {
+      animation: scroll-reveal linear both;
+      animation-timeline: view();
+      /* Termina cedo (40% da entrada): o leitor nunca alcança um bloco
+         ainda invisível, mesmo rolando rápido. */
+      animation-range: entry 5% entry 40%;
+    }
+  }
+}
+
 /* Movimento reduzido: o conteúdo aparece, mas sem deslocamento.
    Não escondemos nada — apenas removemos o movimento. */
 @media (prefers-reduced-motion: reduce) {

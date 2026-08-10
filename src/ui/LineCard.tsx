@@ -31,7 +31,11 @@ export function LineCard({ fragrance, headingLevel = "h3" }: LineCardProps) {
   return (
     <Link
       href={`/perfumes/${fragrance.slug}`}
-      className="group relative block overflow-hidden rounded-2xl border border-white/10 bg-raised transition-colors duration-500 hover:border-white/25"
+      /* `scroll-reveal` escalona sozinho: cada card entra quando cruza o
+         viewport, então a defasagem vem da posição na grade e não de um
+         delay fixo por índice — que erraria assim que o filtro mudasse a
+         quantidade de cards. */
+      className="scroll-reveal group relative block overflow-hidden rounded-2xl border border-white/10 bg-raised transition-colors duration-500 hover:border-white/25"
     >
       <div
         aria-hidden="true"

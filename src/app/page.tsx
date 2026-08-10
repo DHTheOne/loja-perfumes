@@ -98,7 +98,7 @@ export default function Home() {
         className="mx-auto w-full max-w-7xl px-6 md:px-12"
         style={{ paddingBlock: "var(--space-section)" }}
       >
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <div className="scroll-reveal flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="font-sans text-xs uppercase tracking-[0.35em] text-champagne">
               Catálogo
@@ -134,7 +134,7 @@ export default function Home() {
           className="mx-auto grid w-full max-w-7xl items-center gap-12 px-6 md:grid-cols-2 md:px-12"
           style={{ paddingBlock: "var(--space-section)" }}
         >
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
+          <div className="scroll-reveal relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
             <Image
               src="/media/hero/bottle-reference.jpg"
               alt="Frasco mestre da casa: vidro transparente de faces retas e tampa metálica champanhe, sobre superfície escura"
@@ -144,7 +144,7 @@ export default function Home() {
             />
           </div>
 
-          <div>
+          <div className="scroll-reveal">
             <p className="font-sans text-xs uppercase tracking-[0.35em] text-champagne">
               A casa
             </p>
@@ -182,7 +182,7 @@ export default function Home() {
       {signature ? (
         <section
           aria-labelledby="assinatura-heading"
-          className="mx-auto w-full max-w-7xl px-6 text-center md:px-12"
+          className="scroll-reveal mx-auto w-full max-w-7xl px-6 text-center md:px-12"
           style={{ paddingBlock: "var(--space-section)" }}
         >
           <p className="font-sans text-xs uppercase tracking-[0.35em] text-champagne">
