@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import PerfumePage, {
@@ -6,6 +6,7 @@ import PerfumePage, {
   generateStaticParams,
 } from "@/app/perfumes/[slug]/page";
 import { lines } from "@/catalog/lines";
+import { renderWithProviders } from "@/test-utils";
 
 function pageProps(slug: string) {
   return { params: Promise.resolve({ slug }) };
@@ -17,7 +18,8 @@ describe("página de produto", () => {
   });
 
   it("renderiza pirâmide, perfil, preços e CTA honesto", async () => {
-    render(await PerfumePage(pageProps("lenho-vigil")));
+    // Com provedores: a seção de volumes virou o controle de sacola.
+    renderWithProviders(await PerfumePage(pageProps("lenho-vigil")));
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Lenho Vigil" }),
@@ -27,9 +29,16 @@ describe("página de produto", () => {
     expect(
       screen.getByRole("img", { name: "Intensidade 4 de 5" }),
     ).toBeInTheDocument();
+    // O CTA deixou de ser um botão morto e virou entrada na sacola. O que o
+    // caso protege continua sendo o mesmo: a página não pode prometer compra
+    // enquanto as vendas não abriram, então o aviso acompanha a ação.
     expect(
-      screen.getByRole("button", { name: "Vendas abrem em breve" }),
-    ).toBeDisabled();
+      screen.getByRole("button", { name: /Reservar 50 ml/ }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/vendas ainda não abriram/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("radio", { name: /50 ml/ }),
+    ).toBeInTheDocument();
   });
 
   it("gera metadata com o nome do perfume", async () => {

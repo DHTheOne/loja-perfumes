@@ -3,8 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { formatPriceBRL, getLineBySlug, lines } from "@/catalog/lines";
+import { getLineBySlug, lines } from "@/catalog/lines";
 import { openGraphFor, site } from "@/config/site";
+import { AddToBag } from "@/ui/AddToBag";
 import { BottleGlyph } from "@/ui/BottleGlyph";
 import { hexToRgba } from "@/ui/color";
 import { lineMediaAlt, lineMediaForSlug } from "@/ui/lineMedia";
@@ -193,32 +194,8 @@ export default async function PerfumePage({ params }: PageProps) {
             >
               Volumes
             </h2>
-            <ul className="mt-4 flex flex-wrap gap-4">
-              {fragrance.volumes.map((volume) => (
-                <li
-                  key={volume.ml}
-                  className="rounded-xl border border-white/10 bg-raised px-6 py-4"
-                >
-                  <p className="font-sans text-sm text-ink">{volume.ml} ml</p>
-                  <p className="mt-1 font-sans text-base text-champagne">
-                    {formatPriceBRL(volume.priceCents)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-6">
-              <button
-                type="button"
-                disabled
-                className="inline-flex h-12 cursor-not-allowed items-center justify-center rounded-full border border-white/15 px-8 font-sans text-sm text-ink-muted"
-              >
-                Vendas abrem em breve
-              </button>
-              <p className="mt-3 font-sans text-xs leading-relaxed text-ink-muted">
-                A loja está em construção — preços exibidos são de
-                demonstração.
-              </p>
+            <div className="mt-4">
+              <AddToBag slug={fragrance.slug} volumes={fragrance.volumes} />
             </div>
           </section>
 

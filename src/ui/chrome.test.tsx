@@ -1,12 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
+import { renderWithProviders } from "@/test-utils";
 import { SiteFooter } from "@/ui/SiteFooter";
 import { SiteHeader } from "@/ui/SiteHeader";
 
 describe("SiteHeader", () => {
   it("tem navegação principal e atalho para o conteúdo", () => {
-    render(<SiteHeader />);
+    // Com provedores: o header passou a conter o link da sacola.
+    renderWithProviders(<SiteHeader />);
 
     expect(screen.getByRole("link", { name: "Coleções" })).toHaveAttribute(
       "href",

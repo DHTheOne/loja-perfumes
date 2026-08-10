@@ -13,12 +13,24 @@ import { siteOrigin } from "@/config/origin";
  */
 export const MINUTAS_LEGAIS = ["/privacidade", "/termos", "/trocas"] as const;
 
+/**
+ * Sacola e checkout também ficam fora.
+ *
+ * O conteúdo delas é o estado local de cada visitante, não uma página do
+ * catálogo: rastreador sempre veria a sacola vazia, e oferecê-la na busca
+ * seria um resultado sem conteúdo. O `robots: { index: false }` de cada
+ * página é o controle que vale; esta entrada evita o rastreamento.
+ */
+export const ROTAS_DE_SACOLA = ["/sacola"] as const;
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: [...MINUTAS_LEGAIS],
+      // `/sacola` cobre também `/sacola/checkout` — o padrão do robots.txt é
+      // por prefixo.
+      disallow: [...MINUTAS_LEGAIS, ...ROTAS_DE_SACOLA],
     },
     sitemap: `${siteOrigin()}/sitemap.xml`,
   };

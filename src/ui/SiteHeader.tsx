@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { site } from "@/config/site";
+import { BagLink } from "@/ui/BagLink";
 
 const navItems = [
   { href: "/colecoes", label: "Coleções" },
@@ -55,6 +56,9 @@ export function SiteHeader() {
                 </Link>
               </li>
             ))}
+            <li>
+              <BagLink />
+            </li>
           </ul>
         </nav>
       </div>
