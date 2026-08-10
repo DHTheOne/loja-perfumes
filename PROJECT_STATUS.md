@@ -1,7 +1,7 @@
 # PROJECT STATUS
 
 > Arquivo de progresso exigido pelo prompt mestre (linha 43).
-> Atualizado em 2026-08-07. Branch de trabalho: `feat/loja-perfumes`.
+> Atualizado em 2026-08-10. Branch de trabalho: `feat/loja-perfumes`.
 
 ## Estado atual
 
@@ -94,6 +94,7 @@ Saldo necessário se optar pela trilha paga depois: **~500 créditos ≈ R$ 88**
 | R6 | 3D pesado prejudicar mobile | Média | Mitigação arquitetural definida |
 | R7 | Uso comercial da saída das ferramentas de IA não confirmado | Média | **Novo** — checklist em `MEDIA_PLAN.md` §2 |
 | R8 | Nomes de linha fictícios sem busca de anterioridade de marca | Média | **Novo** — obrigatório antes do lançamento |
+| R9 | Sacola sem checkout real: fluxo termina numa página explicativa | Média | **Novo (2026-08-10)** — deliberado. Coletar nome, endereço ou pagamento exige decisões pendentes do proprietário (provedor de e-mail, frete, dados fiscais) e credenciais do Mercado Pago que não estão configuradas. Formulário que descarta o que recebe é pior que nenhum: a pessoa entregaria dados achando que virou pedido. `/sacola/checkout` lista as pendências reais |
 
 ## Decisões ainda pendentes do proprietário
 
@@ -137,6 +138,13 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | `theme-color` + `colorScheme: dark` | Feito (2026-08-09) | A barra do Chrome no Android abria clara sobre a página escura |
 | Testes de regressão de Open Graph | Feito (2026-08-09) | 8 casos novos em `seo.test.ts` (77 → 85). Verificados por reintrodução da falha: o teste fica vermelho |
 | Favicon próprio | Feito (2026-08-09) | Era o padrão do `create-next-app` (logo do Next.js) desde o scaffold. Trocado pela silhueta do frasco em champanhe sobre `--surface-void`, nas proporções do `BottleGlyph`: `src/app/icon.svg` + `src/app/favicon.ico` (16/32/48/64 px). Legibilidade conferida renderizando a 16 px |
+| Cinematográficas servidas em cards e produto | Feito (2026-08-10) | `npm run media:lines` converte os 7 PNG mestres em WebP de 1600 px: 1,4–1,9 MB por arquivo viraram 26–49 KB, 253 KB no total. `LineCard` e a página de produto passaram a usá-las, com `BottleGlyph` preservado como fallback na mesma caixa 16:9. Cada produto anuncia a própria imagem no cartão social — antes as sete publicavam o mesmo frasco |
+| Cavidade interna do frasco 3D | Feito (2026-08-10) | Parede de 0,055 com `backside`, e o líquido passou a carregar a cor da linha (atenuação 0,22 contra 5,5 da parede). Aninhar dois `MeshTransmissionMaterial` foi tentado e descartado: cada um desenha a cena num buffer que exclui a si mesmo, e o frasco virou placa opaca |
+| Realismo do render do hero | Feito (2026-08-10) | `Backdrop` de estúdio atrás do frasco — material de transmissão sobre fundo preto devolve preto, e era isso que fazia o vidro ler como superfície chapada. Névoa recuada para 6..11 para não anular o backdrop; `envMapIntensity` 1,6 nas arestas |
+| Cena 3D nas páginas de produto | Feito (2026-08-10) | Vidro na cor da família; `useSceneAllowed` e `StudioEnvironment` extraídos para não duplicar critério de carga nem luz. O fallback passou a ser a cinematográfica da própria linha |
+| Revelação por rolagem sem JavaScript | Feito (2026-08-10) | `animation-timeline: view()` dentro de `@supports`, com gate próprio de `prefers-reduced-motion` — o kill-switch global zera `animation-duration`, que animação por rolagem não usa |
+| Guia de notas em `/notas` | Feito (2026-08-10) | 61 notas em 7 linhas, 3 atravessando mais de uma. Índice derivado do catálogo, não lista paralela. `/familias/[familia]` foi descartada por competir com `/colecoes?familia=` |
+| Sacola e etapa de checkout | Feito (2026-08-10) | Estado em `localStorage` via `useSyncExternalStore`; preço lido do catálogo, nunca copiado para o item. Checkout sem formulário de propósito — ver "Riscos" |
 | Lint limpo no projeto inteiro | Feito (2026-08-09) | `npm run lint` acusava aviso em `coverage/block-navigation.js`, JS de terceiros do relatório do v8. O `eslint.config.mjs` é protegido por hook, então a exclusão foi para o script: `--ignore-pattern` para `coverage`, `test-results` e `playwright-report`. Os configs da raiz continuam sendo verificados |
 
 ### Mídia — lote 01
@@ -163,13 +171,9 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 
 1. Proprietário aprova (ou substitui) o wordmark provisório "Sillage" e os
    nomes de linha do `MEDIA_PLAN.md` §5 — agora visíveis no site.
-2. **Integrar as 7 cinematográficas ao site** — destravado em 2026-08-09 com a
-   regeração da Flora Velada. As 7 estão em `docs/media/generated/` e **ainda
-   não são servidas**: falta convertê-las para WebP/AVIF em tamanhos web,
-   movê-las para `public/media/lines/` e ligá-las em `LineCard` e na página de
-   produto, substituindo o `BottleGlyph`. Vale também trocar a imagem social
-   por página de produto pela imagem da própria linha (hoje todas usam o hero;
-   ver `socialImage` em `src/config/site.ts`).
+2. ~~**Integrar as 7 cinematográficas ao site**~~ **Feito em 2026-08-10**
+   (commit `8dcb769`): WebP em `public/media/lines/`, ligadas em `LineCard` e
+   na página de produto, e cartão social por linha.
 3. Regerar o vídeo do hero com o frasco mestre.
 4. ~~Integrar a branch `feat/media-master-bottle`~~ **Feito em 2026-08-07**:
    squash merge no commit `ba10ee3` (9 arquivos — 8 PNG + manifesto de
