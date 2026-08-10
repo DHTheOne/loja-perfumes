@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { MeshTransmissionMaterial, RoundedBox } from "@react-three/drei";
-import type { Group } from "three";
+import type { Group, Mesh } from "three";
 
 import { line, metal, type LineKey } from "@/ui/tokens";
 
@@ -28,6 +28,30 @@ const BODY_TOP = BODY.height / 2;
 const COLLAR_Y = BODY_TOP + COLLAR.height / 2;
 const CAP_Y = BODY_TOP + COLLAR.height + CAP.height / 2;
 
+/**
+ * Espessura da parede de vidro.
+ *
+ * É ela que transforma o corpo em casca. Um frasco de perfume real tem vidro
+ * grosso — 4 a 6 mm num corpo de 10 cm. 0,055 em unidades de cena mantém essa
+ * razão e é o que dá a aresta dupla que se vê nas cinematográficas: a luz
+ * atravessa parede, cavidade e parede de novo, em vez de um bloco maciço.
+ */
+const WALL = 0.055;
+
+const CAVITY = {
+  width: BODY.width - WALL * 2,
+  height: BODY.height - WALL * 2,
+  depth: BODY.depth - WALL * 2,
+  radius: Math.max(BODY.radius - WALL / 2, 0.01),
+} as const;
+
+/** Fração da cavidade ocupada pelo perfume. */
+const FILL = 0.62;
+
+const LIQUID_HEIGHT = CAVITY.height * FILL;
+/** Assenta o líquido no fundo da cavidade, não no centro do corpo. */
+const LIQUID_Y = -CAVITY.height / 2 + LIQUID_HEIGHT / 2;
+
 type BottleProps = {
   /** Família olfativa — define a cor do vidro. Ver MEDIA_PLAN.md §5. */
   lineKey?: LineKey;
@@ -41,24 +65,43 @@ type BottleProps = {
  */
 export function Bottle({ lineKey = "comumRaro" }: BottleProps) {
   const groupRef = useRef<Group>(null);
+  const liquidRef = useRef<Mesh>(null);
   const glassColor = line[lineKey];
 
   useFrame((state, delta) => {
     const group = groupRef.current;
     if (!group) return;
 
+    const t = state.clock.elapsedTime;
+
     // Órbita lenta e contínua, sem corte — mesma linguagem de movimento
     // dos vídeos de referência. delta mantém a velocidade independente do FPS.
     group.rotation.y += delta * 0.18;
 
     // Flutuação quase imperceptível, só para o objeto não parecer colado.
-    group.position.y = Math.sin(state.clock.elapsedTime * 0.6) * 0.015;
+    const bob = Math.sin(t * 0.6);
+    group.position.y = bob * 0.015;
+
+    // Inclinação mínima acompanhando a subida e a descida. Corpo rígido que
+    // sobe e desce sem nenhuma variação de eixo lê como elevador, não como
+    // objeto flutuando.
+    group.rotation.z = Math.sin(t * 0.42) * 0.012;
+
+    // O líquido responde ao movimento do frasco em contrafase: a superfície
+    // de um líquido tende a se manter na horizontal enquanto o recipiente
+    // inclina. Sem isto o perfume parece gelatina presa ao vidro.
+    const liquid = liquidRef.current;
+    if (liquid) {
+      liquid.rotation.z = -group.rotation.z * 0.65;
+    }
   });
 
   return (
     <group ref={groupRef} dispose={null}>
-      {/* Corpo em vidro. A transmissão faz a refração; a espessura controla
-          quanto o fundo distorce ao atravessar o vidro. */}
+      {/* Parede externa do vidro.
+          `thickness` agora vale a parede (0,055), não a profundidade inteira
+          do corpo (0,32). Era isso que fazia o frasco refratar como um bloco
+          maciço: a luz atravessava 32 cm de vidro imaginário. */}
       <RoundedBox
         args={[BODY.width, BODY.height, BODY.depth]}
         radius={BODY.radius}
@@ -69,9 +112,24 @@ export function Bottle({ lineKey = "comumRaro" }: BottleProps) {
             atenuação, que é como vidro tingido se comporta de verdade — a cor
             se acumula com a distância percorrida dentro do material, em vez de
             pintar a superfície e deixá-la leitosa. */}
+        {/* `color` branco mantém o vidro incolor; a cor da linha entra por
+            atenuação, que é como vidro tingido se comporta de verdade — a cor
+            se acumula com a distância percorrida dentro do material, em vez de
+            pintar a superfície e deixá-la leitosa.
+
+            `backside` é o que dá a casca. O material renderiza primeiro as
+            faces de trás e só depois as da frente, então a luz é refratada
+            duas vezes: ao entrar e ao sair. É a forma suportada de simular
+            interior — empilhar um segundo mesh de transmissão dentro do
+            primeiro não funciona, porque cada MeshTransmissionMaterial
+            desenha a cena num buffer que exclui a si mesmo e os dois se
+            ignoram, achatando o resultado. */}
         <MeshTransmissionMaterial
           transmission={1}
-          thickness={0.32}
+          thickness={WALL}
+          backside
+          backsideThickness={CAVITY.depth}
+          backsideResolution={256}
           ior={1.5}
           roughness={0.04}
           chromaticAberration={0.06}
@@ -81,11 +139,42 @@ export function Bottle({ lineKey = "comumRaro" }: BottleProps) {
           temporalDistortion={0}
           color="#ffffff"
           attenuationColor={glassColor}
-          attenuationDistance={1.8}
-          samples={8}
+          /* Distância longa deixa a parede praticamente incolor. Quem carrega
+             a cor da linha passou a ser o líquido, como nas cinematográficas:
+             o vidro é claro e o conteúdo é que tinge. Com a parede tingida, o
+             frasco lia como bloco monolítico de vidro colorido e o menisco
+             desaparecia. */
+          attenuationDistance={5.5}
+          samples={6}
           resolution={512}
         />
       </RoundedBox>
+
+      {/* Perfume.
+          O menisco — a linha onde o líquido encontra o vidro — é o sinal mais
+          forte de que existe cavidade: é ele que separa "vidro tingido" de
+          "frasco com conteúdo". Material físico comum, não de transmissão,
+          justamente para não disputar o buffer com a parede (ver acima). */}
+      <mesh ref={liquidRef} position={[0, LIQUID_Y, 0]}>
+        <boxGeometry
+          args={[CAVITY.width * 0.99, LIQUID_HEIGHT, CAVITY.depth * 0.99]}
+        />
+        {/* Transmissão parcial, não total: um líquido totalmente transmissivo
+            sobre fundo preto devolve preto — foi o que apagou o menisco na
+            primeira tentativa. Em 0,55 o perfume ainda deixa a luz passar,
+            mas reflete difusamente o bastante da key para ter corpo próprio
+            contra o fundo escuro. */}
+        <meshPhysicalMaterial
+          color={glassColor}
+          transmission={0.55}
+          thickness={CAVITY.depth}
+          ior={1.38}
+          roughness={0.14}
+          metalness={0}
+          attenuationColor={glassColor}
+          attenuationDistance={0.45}
+        />
+      </mesh>
 
       {/* Colar metálico entre o ombro e a tampa. Dois anéis, como no mestre. */}
       <mesh position={[0, COLLAR_Y, 0]} castShadow>
