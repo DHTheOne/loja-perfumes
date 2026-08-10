@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef, useSyncExternalStore } from "react";
 
@@ -139,15 +138,33 @@ export function CinematicHero({
             Sai do servidor, é o LCP, e permanece sob o vídeo. Se a decodificação
             falhar ou demorar, o que fica na tela é uma imagem correta, não um
             retângulo vazio. */}
-        <Image
-          src={media.poster}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-          style={{ zIndex: "var(--layer-ambient)" }}
-        />
+        {/* `<picture>` e não next/image: são DOIS enquadramentos distintos —
+            16:9 e 9:16 compostos separadamente —, não a mesma imagem em
+            escalas diferentes. next/image gera srcset de um único `src` e não
+            faz art direction; as alternativas seriam esticar o horizontal no
+            celular ou renderizar duas <Image> alternadas por CSS, o que baixa
+            as duas, já que `display: none` não impede o fetch. É o mesmo
+            raciocínio que o hero antigo documentava em HeroFallback. */}
+        <picture>
+          <source
+            media="(max-aspect-ratio: 3/4)"
+            srcSet={media.posterVertical}
+            width={1080}
+            height={1920}
+          />
+          {/* A regra `no-img-element` abre exceção para <img> dentro de
+              <picture>, que é exatamente o caso de art direction acima. */}
+          <img
+            src={media.poster}
+            alt=""
+            width={1920}
+            height={1080}
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ zIndex: "var(--layer-ambient)" }}
+          />
+        </picture>
 
         {/* Camada 2 — vídeo. Sem controles, sem som, sem laço: ele não toca,
             é percorrido. */}
@@ -163,16 +180,41 @@ export function CinematicHero({
             className="absolute inset-0 h-full w-full object-cover"
             style={{ zIndex: "var(--layer-media)" }}
           >
-            {/* O mobile recebe o arquivo de 720: um terço do peso, e a
-                diferença é invisível numa tela desse tamanho. */}
+            {/* Três arquivos, três enquadramentos. O celular recebe a
+                composição 9:16 própria — não o 16:9 esticado nem recortado.
+                A ordem importa: o navegador escolhe a PRIMEIRA fonte cuja
+                media query casa. */}
             <source
-              src={media.mobile}
+              src={media.vertical}
               type="video/mp4"
-              media="(max-width: 767px)"
+              media="(max-aspect-ratio: 3/4)"
+            />
+            <source
+              src={media.tablet}
+              type="video/mp4"
+              media="(max-width: 1279px)"
             />
             <source src={media.desktop} type="video/mp4" />
           </video>
         )}
+
+        {/* Emenda da composição vertical.
+            A faixa nítida ocupa de 22,4% a 54,1% da altura do arquivo 9:16, e
+            a transição para a extensão desfocada é uma aresta reta — sem
+            tratamento, lê como vídeo colado sobre fundo borrado. Estes dois
+            degradês, alinhados às bordas da faixa, dissolvem a aresta. Só
+            existem no enquadramento vertical; no 16:9 não há emenda alguma. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 portrait:block landscape:hidden"
+          style={{
+            zIndex: "var(--layer-grade)",
+            background: `linear-gradient(to bottom,
+              transparent 17%, ${art.ambient} 22.4%, transparent 28%,
+              transparent 48%, ${art.ambient} 54.1%, transparent 60%)`,
+            opacity: 0.85,
+          }}
+        />
 
         {/* Camada 3 — tratamento de luz. Dois gradientes: um rebaixa o topo
             para o header não competir com a cena, outro escurece a base o

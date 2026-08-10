@@ -38,8 +38,14 @@ export function SiteHeader() {
           <span className="sr-only"> — página inicial</span>
         </Link>
 
+        {/* O espaçamento cede antes do conteúdo.
+            Com quatro itens mais o wordmark, `gap-8` e `tracking-[0.25em]`
+            estouravam 390 px: o wordmark colidia com "Coleções" e "Sacola"
+            saía da tela — verificado em captura no iPhone 13. Esconder itens
+            resolveria a largura tirando navegação de quem tem menos espaço
+            para procurá-la; apertar o respiro custa só respiro. */}
         <nav aria-label="Navegação principal">
-          <ul className="flex items-center gap-8">
+          <ul className="flex items-center gap-4 md:gap-8">
             {navItems.map((item) => (
               <li key={item.href}>
                 {/* `inline-flex` + `py-3.5` levam a área clicável a ~44px de
@@ -50,7 +56,7 @@ export function SiteHeader() {
                     bem abaixo dos 44px recomendados para dedo. */}
                 <Link
                   href={item.href}
-                  className="inline-flex items-center py-3.5 font-sans text-xs uppercase tracking-[0.25em] text-ink-muted transition-colors duration-300 hover:text-champagne"
+                  className="inline-flex items-center py-3.5 font-sans text-[11px] uppercase tracking-[0.12em] md:text-xs md:tracking-[0.25em] text-ink-muted transition-colors duration-300 hover:text-champagne"
                 >
                   {item.label}
                 </Link>

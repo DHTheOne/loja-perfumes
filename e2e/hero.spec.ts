@@ -129,14 +129,12 @@ test.describe("hero — fallback obrigatório", () => {
 
 test.describe("hero — mídia responsiva", () => {
   /**
-   * Substitui o caso que verificava o `<picture>` do hero antigo, com recortes
-   * distintos por viewport. O hero cinematográfico ainda não tem recorte
-   * retrato — é uma lacuna aberta de §23, registrada no PROJECT_STATUS.
+   * Sucessor do caso que verificava o `<picture>` do hero antigo.
    *
-   * O que já existe e passa a ser protegido aqui é a outra metade da direção
-   * mobile: o peso. O celular recebe o arquivo de 720 (~1,4 MB) e não o de
-   * 1080 (~5 MB). Servir o desktop ao celular seria triplicar a mídia do LCP
-   * numa conexão que costuma ser pior.
+   * O celular não recebe o 16:9 nem esticado nem recortado: recebe a
+   * composição 9:16 própria, com o quadro inteiro numa faixa no terço
+   * superior e o inferior livre para a tipografia. Serve à direção de arte
+   * (§23) e ao peso ao mesmo tempo — 1,6 MB contra os ~5,9 MB do desktop.
    */
   test("o arquivo de vídeo servido corresponde ao viewport", async ({
     page,
@@ -154,7 +152,7 @@ test.describe("hero — mídia responsiva", () => {
           ),
         { timeout: 10_000 },
       )
-      .toContain(testInfo.project.name === "mobile" ? "-720" : "-1080");
+      .toContain(testInfo.project.name === "mobile" ? "-vertical" : "-1080");
   });
 });
 

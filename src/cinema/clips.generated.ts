@@ -10,9 +10,13 @@ export type CinemaClip = {
   /** Duração em segundos. O scrub mapeia o progresso da rolagem nela. */
   duration: number;
   desktop: string;
-  mobile: string;
+  /** Mesma composição 16:9, arquivo menor — telas médias. */
+  tablet: string;
+  /** Composição 9:16 própria: faixa nítida no alto, extensão desfocada. */
+  vertical: string;
   /** Primeiro quadro — a composição estática que precede qualquer animação. */
   poster: string;
+  posterVertical: string;
   /** Último quadro — ponto de continuidade com a seção seguinte. */
   tail: string;
 };
@@ -22,48 +26,60 @@ export const CLIPS = {
     slug: "salao-luz",
     duration: 8,
     desktop: "/media/cinema/salao-luz-1080.mp4",
-    mobile: "/media/cinema/salao-luz-720.mp4",
+    tablet: "/media/cinema/salao-luz-720.mp4",
+    vertical: "/media/cinema/salao-luz-vertical.mp4",
     poster: "/media/cinema/salao-luz-poster.jpg",
+    posterVertical: "/media/cinema/salao-luz-poster-vertical.jpg",
     tail: "/media/cinema/salao-luz-tail.jpg",
   },
   "pedra-vapor": {
     slug: "pedra-vapor",
     duration: 8,
     desktop: "/media/cinema/pedra-vapor-1080.mp4",
-    mobile: "/media/cinema/pedra-vapor-720.mp4",
+    tablet: "/media/cinema/pedra-vapor-720.mp4",
+    vertical: "/media/cinema/pedra-vapor-vertical.mp4",
     poster: "/media/cinema/pedra-vapor-poster.jpg",
+    posterVertical: "/media/cinema/pedra-vapor-poster-vertical.jpg",
     tail: "/media/cinema/pedra-vapor-tail.jpg",
   },
   "concreto": {
     slug: "concreto",
     duration: 8,
     desktop: "/media/cinema/concreto-1080.mp4",
-    mobile: "/media/cinema/concreto-720.mp4",
+    tablet: "/media/cinema/concreto-720.mp4",
+    vertical: "/media/cinema/concreto-vertical.mp4",
     poster: "/media/cinema/concreto-poster.jpg",
+    posterVertical: "/media/cinema/concreto-poster-vertical.jpg",
     tail: "/media/cinema/concreto-tail.jpg",
   },
   "galeria": {
     slug: "galeria",
     duration: 8,
     desktop: "/media/cinema/galeria-1080.mp4",
-    mobile: "/media/cinema/galeria-720.mp4",
+    tablet: "/media/cinema/galeria-720.mp4",
+    vertical: "/media/cinema/galeria-vertical.mp4",
     poster: "/media/cinema/galeria-poster.jpg",
+    posterVertical: "/media/cinema/galeria-poster-vertical.jpg",
     tail: "/media/cinema/galeria-tail.jpg",
   },
   "travertino": {
     slug: "travertino",
     duration: 8,
     desktop: "/media/cinema/travertino-1080.mp4",
-    mobile: "/media/cinema/travertino-720.mp4",
+    tablet: "/media/cinema/travertino-720.mp4",
+    vertical: "/media/cinema/travertino-vertical.mp4",
     poster: "/media/cinema/travertino-poster.jpg",
+    posterVertical: "/media/cinema/travertino-poster-vertical.jpg",
     tail: "/media/cinema/travertino-tail.jpg",
   },
   "pedestal-ambar": {
     slug: "pedestal-ambar",
     duration: 8,
     desktop: "/media/cinema/pedestal-ambar-1080.mp4",
-    mobile: "/media/cinema/pedestal-ambar-720.mp4",
+    tablet: "/media/cinema/pedestal-ambar-720.mp4",
+    vertical: "/media/cinema/pedestal-ambar-vertical.mp4",
     poster: "/media/cinema/pedestal-ambar-poster.jpg",
+    posterVertical: "/media/cinema/pedestal-ambar-poster-vertical.jpg",
     tail: "/media/cinema/pedestal-ambar-tail.jpg",
   },
 } as const satisfies Record<string, CinemaClip>;

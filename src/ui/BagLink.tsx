@@ -19,7 +19,7 @@ export function BagLink() {
   return (
     <Link
       href="/sacola"
-      className="inline-flex items-center gap-2 py-3.5 font-sans text-xs uppercase tracking-[0.25em] text-ink-muted transition-colors duration-300 hover:text-champagne"
+      className="inline-flex items-center gap-2 py-3.5 font-sans text-[11px] uppercase tracking-[0.12em] text-ink-muted transition-colors duration-300 hover:text-champagne md:text-xs md:tracking-[0.25em]"
     >
       Sacola
       {hasItems ? (

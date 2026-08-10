@@ -61,6 +61,46 @@ const VARIANTS = [
   { suffix: "720", width: 1280, crf: 26 },
 ];
 
+/**
+ * Composição vertical (9:16) para telas de celular.
+ *
+ * NÃO é um recorte do 16:9. Recortar 1080 de largura de um quadro de 1920
+ * descartaria 44% da cena, e no `concreto` isso é fatal: o frasco cresce até
+ * encostar nas bordas laterais no fim do clipe, então o corte decepa o produto
+ * justamente no clímax do movimento.
+ *
+ * A composição escolhida mantém o quadro inteiro, nítido, numa faixa
+ * posicionada no terço superior, e estende o restante do enquadramento com uma
+ * versão desfocada e rebaixada do MESMO quadro. Duas consequências: a extensão
+ * acompanha a luz da cena a cada instante (uma barra de cor sólida
+ * descolaria assim que a câmera mudasse a iluminação), e o terço inferior vira
+ * espaço negativo real para a tipografia, em vez de texto sobre o produto.
+ *
+ * `BAND_TOP` põe o centro da faixa a ~38% da altura — o frasco fica na linha
+ * superior de interesse e o texto ocupa a metade de baixo.
+ */
+const VERTICAL = {
+  width: 1080,
+  height: 1920,
+  bandTop: 430,
+  crf: 26,
+};
+
+/**
+ * O desfoque é feito reduzindo, borrando pouco e ampliando de volta. Um
+ * `gblur` com sigma alto direto em 1080×1920 custa caro por quadro; este
+ * caminho entrega o mesmo resultado visual por uma fração do tempo, porque a
+ * ampliação bilinear já é, por si, um borrão.
+ */
+const VERTICAL_FILTER = [
+  "[0:v]split=2[bgsrc][fgsrc]",
+  "[bgsrc]scale=136:242,gblur=sigma=5," +
+    `scale=${VERTICAL.width}:${VERTICAL.height},` +
+    "eq=brightness=-0.10:saturation=0.85,setsar=1[bg]",
+  `[fgsrc]scale=${VERTICAL.width}:-2,setsar=1[fg]`,
+  `[bg][fg]overlay=(W-w)/2:${VERTICAL.bandTop}[v]`,
+].join(";");
+
 async function ffprobeDuration(file) {
   const { stdout } = await run("ffprobe", [
     "-v",
@@ -126,6 +166,60 @@ async function main() {
       ]);
     }
 
+    const vertical = path.join(OUTPUT_DIR, `${slug}-vertical.mp4`);
+    await run("ffmpeg", [
+      "-y",
+      "-v",
+      "error",
+      "-i",
+      source,
+      "-an",
+      "-filter_complex",
+      VERTICAL_FILTER,
+      "-map",
+      "[v]",
+      "-c:v",
+      "libx264",
+      "-profile:v",
+      "high",
+      "-crf",
+      String(VERTICAL.crf),
+      "-preset",
+      "slow",
+      "-g",
+      "12",
+      "-keyint_min",
+      "12",
+      "-sc_threshold",
+      "0",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "+faststart",
+      vertical,
+    ]);
+
+    const verticalPoster = path.join(
+      OUTPUT_DIR,
+      `${slug}-poster-vertical.jpg`,
+    );
+    await run("ffmpeg", [
+      "-y",
+      "-v",
+      "error",
+      "-i",
+      source,
+      "-filter_complex",
+      VERTICAL_FILTER,
+      "-map",
+      "[v]",
+      "-frames:v",
+      "1",
+      "-q:v",
+      "4",
+      verticalPoster,
+    ]);
+
     const poster = path.join(OUTPUT_DIR, `${slug}-poster.jpg`);
     await run("ffmpeg", [
       "-y",
@@ -172,8 +266,10 @@ async function main() {
     slug: "${clip.slug}",
     duration: ${clip.duration},
     desktop: "/media/cinema/${clip.slug}-1080.mp4",
-    mobile: "/media/cinema/${clip.slug}-720.mp4",
+    tablet: "/media/cinema/${clip.slug}-720.mp4",
+    vertical: "/media/cinema/${clip.slug}-vertical.mp4",
     poster: "/media/cinema/${clip.slug}-poster.jpg",
+    posterVertical: "/media/cinema/${clip.slug}-poster-vertical.jpg",
     tail: "/media/cinema/${clip.slug}-tail.jpg",
   },`,
     )
@@ -193,9 +289,13 @@ export type CinemaClip = {
   /** Duração em segundos. O scrub mapeia o progresso da rolagem nela. */
   duration: number;
   desktop: string;
-  mobile: string;
+  /** Mesma composição 16:9, arquivo menor — telas médias. */
+  tablet: string;
+  /** Composição 9:16 própria: faixa nítida no alto, extensão desfocada. */
+  vertical: string;
   /** Primeiro quadro — a composição estática que precede qualquer animação. */
   poster: string;
+  posterVertical: string;
   /** Último quadro — ponto de continuidade com a seção seguinte. */
   tail: string;
 };
