@@ -4,6 +4,7 @@ import { site } from "@/config/site";
 
 const navItems = [
   { href: "/colecoes", label: "Coleções" },
+  { href: "/notas", label: "Notas" },
   { href: "/sobre", label: "Sobre" },
 ] as const;
 

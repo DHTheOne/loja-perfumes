@@ -18,7 +18,7 @@ import { siteOrigin } from "@/config/origin";
 export default function sitemap(): MetadataRoute.Sitemap {
   const origin = siteOrigin();
 
-  const paginasFixas = ["", "/colecoes", "/sobre"].map((rota) => ({
+  const paginasFixas = ["", "/colecoes", "/notas", "/sobre"].map((rota) => ({
     url: `${origin}${rota}`,
     changeFrequency: "monthly" as const,
     priority: rota === "" ? 1 : 0.8,

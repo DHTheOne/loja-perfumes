@@ -11,6 +11,18 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./test.setup.ts"],
     include: ["src/**/*.test.{ts,tsx}"],
+    // 15s no lugar dos 5s padrão.
+    //
+    // Não é teste lento, é contenção: os arquivos rodam em paralelo e cada um
+    // levanta o próprio jsdom. Ao entrar o 13º arquivo (notes.test.ts), o
+    // teste que renderiza as 7 páginas de coleção passou a estourar 5s na
+    // suíte completa e a passar sozinho — comportamento que depende da
+    // máquina, não do código.
+    //
+    // O timeout existe para pegar teste travado, não para medir desempenho de
+    // CPU. Um limite que muda de veredito conforme a carga da máquina produz
+    // falha vermelha sem defeito, que é o pior tipo de sinal num gate de CI.
+    testTimeout: 15_000,
     coverage: {
       provider: "v8",
       include: ["src/**"],

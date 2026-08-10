@@ -5,6 +5,7 @@ import { site } from "@/config/site";
 const navLinks = [
   { href: "/", label: "Início" },
   { href: "/colecoes", label: "Coleções" },
+  { href: "/notas", label: "Guia de notas" },
   { href: "/sobre", label: "Sobre" },
 ] as const;
 
