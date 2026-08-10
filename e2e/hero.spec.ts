@@ -14,6 +14,14 @@ import { expect, test, type Page } from "@playwright/test";
 /** O chunk do three.js passa de 900 KB; os de aplicação ficam na casa das dezenas. */
 const LIMIAR_CHUNK_PESADO = 300_000;
 
+/**
+ * A cena 3D deixou a home quando o hero cinematográfico entrou; hoje ela vive
+ * na página de produto (`ProductVisual`). O contrato de ARCHITECTURE §9 não
+ * mudou — mudou o endereço onde ele é exercido. Reapontar preserva a garantia;
+ * apagar estes casos a perderia junto com a rota antiga.
+ */
+const ROTA_DA_CENA = "/perfumes/lenho-vigil";
+
 function rastrearDownloadDaCena(page: Page): { baixou: () => boolean } {
   let baixou = false;
 
@@ -42,7 +50,7 @@ test.describe("hero — fallback obrigatório", () => {
   test("controle positivo: dispositivo capaz recebe a cena 3D", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto(ROTA_DA_CENA);
     await aguardarDecisaoDoHero(page);
 
     // Se este teste falhar, os negativos abaixo perdem o sentido: passariam
@@ -56,12 +64,13 @@ test.describe("hero — fallback obrigatório", () => {
     const cena = rastrearDownloadDaCena(page);
     await page.emulateMedia({ reducedMotion: "reduce" });
 
-    await page.goto("/");
+    await page.goto(ROTA_DA_CENA);
     await aguardarDecisaoDoHero(page);
 
     expect(await page.locator("canvas").count()).toBe(0);
     expect(cena.baixou()).toBe(false);
-    await expect(page.locator("picture img")).toBeVisible();
+    // Sem a cena, o que fica é a fotografia da própria fragrância.
+    await expect(page.locator("img").first()).toBeVisible();
   });
 
   test("sem WebGL: cai no fallback estático", async ({ page }) => {
@@ -80,12 +89,13 @@ test.describe("hero — fallback obrigatório", () => {
       } as typeof original;
     });
 
-    await page.goto("/");
+    await page.goto(ROTA_DA_CENA);
     await aguardarDecisaoDoHero(page);
 
     expect(await page.locator("canvas").count()).toBe(0);
     expect(cena.baixou()).toBe(false);
-    await expect(page.locator("picture img")).toBeVisible();
+    // Sem a cena, o que fica é a fotografia da própria fragrância.
+    await expect(page.locator("img").first()).toBeVisible();
   });
 
   test("dispositivo fraco: poucos núcleos impedem o download da cena", async ({
@@ -99,7 +109,7 @@ test.describe("hero — fallback obrigatório", () => {
       });
     });
 
-    await page.goto("/");
+    await page.goto(ROTA_DA_CENA);
     await aguardarDecisaoDoHero(page);
 
     expect(await page.locator("canvas").count()).toBe(0);
@@ -118,18 +128,33 @@ test.describe("hero — fallback obrigatório", () => {
 });
 
 test.describe("hero — mídia responsiva", () => {
-  test("o recorte servido corresponde ao viewport", async ({
+  /**
+   * Substitui o caso que verificava o `<picture>` do hero antigo, com recortes
+   * distintos por viewport. O hero cinematográfico ainda não tem recorte
+   * retrato — é uma lacuna aberta de §23, registrada no PROJECT_STATUS.
+   *
+   * O que já existe e passa a ser protegido aqui é a outra metade da direção
+   * mobile: o peso. O celular recebe o arquivo de 720 (~1,4 MB) e não o de
+   * 1080 (~5 MB). Servir o desktop ao celular seria triplicar a mídia do LCP
+   * numa conexão que costuma ser pior.
+   */
+  test("o arquivo de vídeo servido corresponde ao viewport", async ({
     page,
   }, testInfo) => {
     await page.goto("/");
 
-    const src = await page
-      .locator("picture img")
-      .evaluate((img) => (img as HTMLImageElement).currentSrc);
+    const video = page.locator("video").first();
+    await expect(video).toBeAttached();
 
-    const esperado =
-      testInfo.project.name === "mobile" ? "hero-mobile" : "hero-desktop";
-    expect(src).toContain(esperado);
+    await expect
+      .poll(
+        () =>
+          video.evaluate((v: HTMLVideoElement) =>
+            v.currentSrc.split("/").pop(),
+          ),
+        { timeout: 10_000 },
+      )
+      .toContain(testInfo.project.name === "mobile" ? "-720" : "-1080");
   });
 });
 
@@ -141,7 +166,7 @@ test.describe("hero — console e teclado", () => {
     });
     page.on("pageerror", (err) => erros.push(err.message));
 
-    await page.goto("/");
+    await page.goto(ROTA_DA_CENA);
     await aguardarDecisaoDoHero(page);
 
     expect(erros).toEqual([]);

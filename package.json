@@ -9,7 +9,8 @@
     "lint": "eslint --ignore-pattern coverage --ignore-pattern test-results --ignore-pattern playwright-report",
     "test": "vitest run",
     "test:e2e": "next build && playwright test",
-    "media:lines": "node scripts/build-line-media.mjs"
+    "media:lines": "node scripts/build-line-media.mjs",
+    "media:cinema": "node scripts/build-cinema-media.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

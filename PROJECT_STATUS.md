@@ -94,6 +94,8 @@ Saldo necessário se optar pela trilha paga depois: **~500 créditos ≈ R$ 88**
 | R6 | 3D pesado prejudicar mobile | Média | Mitigação arquitetural definida |
 | R7 | Uso comercial da saída das ferramentas de IA não confirmado | Média | **Novo** — checklist em `MEDIA_PLAN.md` §2 |
 | R8 | Nomes de linha fictícios sem busca de anterioridade de marca | Média | **Novo** — obrigatório antes do lançamento |
+| R10 | Hero cinematográfico sem recorte retrato no mobile | Média | **Novo (2026-08-10)** — §23 pede direção de arte própria para telas pequenas. O peso já é tratado (o celular recebe o arquivo de 720, ~1,4 MB contra ~5 MB), mas o enquadramento é o mesmo 16:9 com `object-cover`. O hero anterior tinha `<picture>` com recorte retrato dedicado; essa metade regrediu. Corrigir gerando poster/vídeo em 9:16 no `build-cinema-media.mjs` |
+| R11 | 39,7 MB de vídeo versionados em `public/media/cinema/` | Média | **Novo (2026-08-10)** — coerente com MEDIA_PLAN §8, que admite `public/media/` no repositório, mas é peso permanente no Git. Só o clipe do hero é baixado na abertura; os outros cinco existem para os capítulos ainda não construídos. Decisão do proprietário: manter, ou mover a mídia para object storage já na Fase 5 |
 | R9 | Sacola sem checkout real: fluxo termina numa página explicativa | Média | **Novo (2026-08-10)** — deliberado. Coletar nome, endereço ou pagamento exige decisões pendentes do proprietário (provedor de e-mail, frete, dados fiscais) e credenciais do Mercado Pago que não estão configuradas. Formulário que descarta o que recebe é pior que nenhum: a pessoa entregaria dados achando que virou pedido. `/sacola/checkout` lista as pendências reais |
 
 ## Decisões ainda pendentes do proprietário
@@ -145,6 +147,9 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
 | Revelação por rolagem sem JavaScript | Feito (2026-08-10) | `animation-timeline: view()` dentro de `@supports`, com gate próprio de `prefers-reduced-motion` — o kill-switch global zera `animation-duration`, que animação por rolagem não usa |
 | Guia de notas em `/notas` | Feito (2026-08-10) | 61 notas em 7 linhas, 3 atravessando mais de uma. Índice derivado do catálogo, não lista paralela. `/familias/[familia]` foi descartada por competir com `/colecoes?familia=` |
 | Sacola e etapa de checkout | Feito (2026-08-10) | Estado em `localStorage` via `useSyncExternalStore`; preço lido do catálogo, nunca copiado para o item. Checkout sem formulário de propósito — ver "Riscos" |
+| Pipeline de vídeo cinematográfico | Feito (2026-08-10) | `npm run media:cinema` gera desktop/mobile/poster/último-quadro dos 6 CGI. Sem áudio (§26), `faststart` e GOP 12 — o GOP curto é o que torna o scrub viável, porque busca só pousa em keyframe |
+| Hero cinematográfico com scrub por rolagem | Feito (2026-08-10) | Branch `feat/cinematic-scroll`. A rolagem é a linha do tempo do clipe `concreto`, escolhido por ser o único com movimento monotônico. Progresso escrito como custom property dentro do rAF — zero re-render do React por quadro. Sem GSAP |
+| Sistema de movimento e escala de camadas | Feito (2026-08-10) | 4 durações e 4 curvas nomeadas por papel, 6 camadas fixas (`--layer-*`) em `globals.css` |
 | Lint limpo no projeto inteiro | Feito (2026-08-09) | `npm run lint` acusava aviso em `coverage/block-navigation.js`, JS de terceiros do relatório do v8. O `eslint.config.mjs` é protegido por hook, então a exclusão foi para o script: `--ignore-pattern` para `coverage`, `test-results` e `playwright-report`. Os configs da raiz continuam sendo verificados |
 
 ### Mídia — lote 01

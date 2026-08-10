@@ -25,6 +25,36 @@
 
   --duration-slow: 700ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ——— Sistema de movimento ———
+     Quatro durações, não uma escala arbitrária. Cada uma existe para um papel
+     e o nome diz qual: retorno de toque, transição de interface, mudança de
+     estado, gesto de câmera. Valor solto no componente sempre vira um quinto
+     tempo que ninguém sabe justificar. */
+  --motion-fast: 140ms; /* retorno imediato: hover, foco, press */
+  --motion-ui: 280ms; /* transição de interface: painel, menu, card */
+  --motion-medium: 520ms; /* mudança de estado com deslocamento */
+  --motion-cinematic: 1100ms; /* gesto de câmera: revelação, capítulo */
+
+  /* `standard` é simétrica e serve a transições reversíveis (aberto/fechado).
+     `enter` desacelera no fim — o elemento chega e assenta. `exit` acelera no
+     fim — ele sai de cena e não pede atenção. `cinematic` tem partida quase
+     parada, que é o que dá peso de câmera em vez de sensação de slide. */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ——— Camadas ———
+     Seis papéis fixos em vez de z-index inventado por componente. Quem
+     precisar de uma camada nova acrescenta aqui e passa a ter de justificar
+     onde ela entra na pilha. */
+  --layer-ambient: 0; /* cor de fundo e atmosfera */
+  --layer-media: 10; /* vídeo e cena 3D */
+  --layer-grade: 20; /* gradiente e tratamento de luz sobre a mídia */
+  --layer-type: 30; /* tipografia editorial */
+  --layer-ui: 40; /* controles interativos */
+  --layer-nav: 50; /* navegação persistente */
 }
 
 @theme inline {
