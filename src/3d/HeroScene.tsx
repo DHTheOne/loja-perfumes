@@ -3,6 +3,7 @@
 import { Suspense, useSyncExternalStore } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
+  Backdrop,
   Environment,
   Lightformer,
   MeshReflectorMaterial,
@@ -101,7 +102,10 @@ export function HeroScene({ lineKey = "comumRaro" }: HeroSceneProps) {
       className="!absolute inset-0"
     >
       <color attach="background" args={[surface.void]} />
-      <fog attach="fog" args={[surface.void, 4.5, 9]} />
+      {/* Início mais longe que antes (6, não 4,5): o backdrop fica a ~7,8 da
+          câmera e a névoa antiga o devolveria ao preto — anulando justamente
+          a luz de fundo que dá leitura ao vidro. */}
+      <fog attach="fog" args={[surface.void, 6, 11]} />
 
       <ambientLight intensity={lighting.ambientIntensity} />
 
@@ -162,6 +166,26 @@ export function HeroScene({ lineKey = "comumRaro" }: HeroSceneProps) {
         </Environment>
 
         <group position={[0, -0.15, 0]}>
+          {/* Backdrop de estúdio atrás do frasco — o truque clássico de
+              fotografia de produto. Material de transmissão sobre fundo
+              preto devolve preto: era o que fazia o frasco ler como placa
+              opaca (captura do proprietário). A key e o rim acertam esta
+              superfície e criam o halo quente que atravessa o vidro e o
+              líquido. A cor nasce um degrau acima do void para o degradê
+              vir da luz, não do pigmento. */}
+          <Backdrop
+            floor={1.5}
+            segments={24}
+            scale={[14, 6, 3]}
+            position={[0.8, -0.56, -2.2]}
+            receiveShadow
+          >
+            {/* Dois degraus acima do void, não um: o frasco é escuro e sobre
+                um fundo quase preto perdia a silhueta — a forma sólida só
+                aparece quando há luz por trás dela para recortá-la. */}
+            <meshStandardMaterial color="#241c15" roughness={0.95} />
+          </Backdrop>
+
           {/* Frasco deslocado para a direita: o terço esquerdo fica livre para
               a manchete, como no hero de referência do lote 01. */}
           <group position={[1.35, 0, 0]} scale={0.78}>

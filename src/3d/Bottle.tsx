@@ -145,6 +145,11 @@ export function Bottle({ lineKey = "comumRaro" }: BottleProps) {
              frasco lia como bloco monolítico de vidro colorido e o menisco
              desaparecia. */
           attenuationDistance={5.5}
+          /* Reflexo do ambiente acima do padrão: são as arestas que
+             descrevem a forma de um objeto transparente. Sem realce elas
+             somem no fundo e o frasco vira mancha — a leitura de "superficial"
+             que o proprietário apontou. */
+          envMapIntensity={1.6}
           samples={6}
           resolution={512}
         />
@@ -155,26 +160,44 @@ export function Bottle({ lineKey = "comumRaro" }: BottleProps) {
           forte de que existe cavidade: é ele que separa "vidro tingido" de
           "frasco com conteúdo". Material físico comum, não de transmissão,
           justamente para não disputar o buffer com a parede (ver acima). */}
-      <mesh ref={liquidRef} position={[0, LIQUID_Y, 0]}>
-        <boxGeometry
-          args={[CAVITY.width * 0.99, LIQUID_HEIGHT, CAVITY.depth * 0.99]}
-        />
-        {/* Transmissão parcial, não total: um líquido totalmente transmissivo
-            sobre fundo preto devolve preto — foi o que apagou o menisco na
-            primeira tentativa. Em 0,55 o perfume ainda deixa a luz passar,
-            mas reflete difusamente o bastante da key para ter corpo próprio
-            contra o fundo escuro. */}
+      <RoundedBox
+        ref={liquidRef}
+        args={[CAVITY.width * 0.99, LIQUID_HEIGHT, CAVITY.depth * 0.99]}
+        radius={CAVITY.radius}
+        smoothness={4}
+        position={[0, LIQUID_Y, 0]}
+      >
+        {/* Líquido é superfície lisa e molhada: rugosidade quase nula mais
+            clearcoat. A versão anterior (roughness 0,14, cor cheia, canto
+            vivo de boxGeometry) lia como bloco de gesso — apontado pelo
+            proprietário em captura de tela. A cor entra por atenuação, que
+            escurece com a profundidade como líquido real; a superfície em si
+            é incolor. Um perfume claro fica límpido — e é o backdrop atrás
+            do frasco (HeroScene) que o torna visível, não a cor chapada. */}
+        {/* Transmissão total, sem clearcoat.
+            A parede transmite o fundo e fica escura; o líquido, difuso,
+            devolvia branco — dois modelos incoerentes na mesma peça, e daí a
+            leitura de bloco de leite apontada pelo proprietário. Líquido é
+            meio transmissivo como o vidro, apenas mais absorvente: mesma
+            física, atenuação curta. O clearcoat saiu porque acrescentava um
+            verniz especular branco por cima justamente do que precisava
+            ficar límpido.
+
+            A distância curta (0,22 contra 5,5 da parede) é o que distingue
+            os dois: a mesma luz atravessa a parede quase intacta e sai
+            tingida e mais escura ao cruzar o perfume. É isso que desenha o
+            menisco, sem precisar pintá-lo. */}
         <meshPhysicalMaterial
-          color={glassColor}
-          transmission={0.55}
+          color="#ffffff"
+          transmission={1}
           thickness={CAVITY.depth}
-          ior={1.38}
-          roughness={0.14}
+          ior={1.36}
+          roughness={0.02}
           metalness={0}
           attenuationColor={glassColor}
-          attenuationDistance={0.45}
+          attenuationDistance={0.22}
         />
-      </mesh>
+      </RoundedBox>
 
       {/* Colar metálico entre o ombro e a tampa. Dois anéis, como no mestre. */}
       <mesh position={[0, COLLAR_Y, 0]} castShadow>
