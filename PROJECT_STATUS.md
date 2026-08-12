@@ -216,12 +216,26 @@ abertura**, 2 no capítulo 02. O caso E2E que conta vídeos montados foi
 verificado por reintrodução da falha — com o hook armado de saída ele fica
 vermelho com `unexpected value 6`.
 
-**Match cut fica fora do retrato.** O pipeline gera um único `-tail.jpg`,
-extraído do master 16:9, e em retrato o capítulo anterior exibiu a composição
-9:16 — outro enquadramento. Dissolver de um quadro diferente faz o produto
-saltar de posição, o que chama mais atenção para a emenda do que um corte
-seco. **Correção completa pendente:** gerar `-tail-vertical.jpg` no
-`scripts/build-cinema-media.mjs` a partir do master 9:16 já composto.
+**Match cut agora existe nas duas orientações.** O pipeline passou a gerar
+também `-tail-vertical.jpg`, extraído do master pelo MESMO filtro do vídeo
+9:16 — e não recortado do `-tail.jpg`, que não teria a extensão desfocada e
+entregaria uma imagem que nunca esteve na tela. A escolha entre os dois
+quadros é do navegador, por `<picture>` com a mesma media query do poster
+(`max-aspect-ratio: 3/4`), então `matchFrom` passou a receber o SLUG do
+capítulo anterior em vez de um caminho já resolvido: a orientação não existe
+no servidor, e só o cliente pode decidir.
+
+O caso E2E foi verificado por reintrodução da falha, com o `<source>`
+apontando para o quadro 16:9: fica vermelho em mobile com
+`Received "…/concreto-tail.jpg"` contra o padrão `…/concreto-tail-vertical.jpg`.
+A verificação é por `currentSrc`, não por `src` — com art direction o atributo
+`src` continua sendo o 16:9 em qualquer orientação.
+
+> Armadilha registrada: o E2E roda contra o BUILD DE PRODUÇÃO
+> (`playwright.config.ts`, `npx next start`) com `reuseExistingServer`. Editar
+> o código-fonte e rodar o Playwright direto testa o build ANTIGO e produz
+> verde falso — foi exatamente o que aconteceu na primeira tentativa deste
+> item. Rode `npx next build` antes de confiar em qualquer resultado.
 
 **A decidir pelo proprietário — ritmo.** A home passou a ter **19 telas de
 altura** (17 252 px a 910 px de viewport), efeito de seis capítulos com trilho

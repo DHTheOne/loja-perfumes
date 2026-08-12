@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef } from "react";
 
@@ -52,8 +51,15 @@ type CinematicChapterProps = {
   title: string;
   lede?: string;
   cta?: ChapterCta;
-  /** Último quadro do capítulo anterior. Sem ele não há match cut. */
-  matchFrom?: string;
+  /**
+   * Capítulo anterior, por slug. Sem ele não há match cut.
+   *
+   * Recebe o SLUG e não um caminho pronto porque a emenda precisa de dois
+   * quadros — o 16:9 e o 9:16 —, e quem escolhe entre eles é o navegador,
+   * pela orientação. Passar um caminho só obrigaria a página a adivinhar a
+   * orientação no servidor, que é onde ela não existe.
+   */
+  matchFrom?: ClipSlug;
   /**
    * Altura do trilho em `svh`. Mais trilho, câmera mais lenta.
    *
@@ -83,6 +89,7 @@ export function CinematicChapter({
 
   const media = clip(slug);
   const art = artDirection(slug);
+  const matchClip = matchFrom ? clip(matchFrom) : null;
 
   const handleProgress = useCallback((progress: number) => {
     stageRef.current?.style.setProperty("--p", progress.toFixed(4));
@@ -218,30 +225,36 @@ export function CinematicChapter({
               exatamente esta imagem — então o primeiro quadro deste capítulo
               é o mesmo pixel, e a emenda desaparece.
 
-              SÓ EM PAISAGEM (`portrait:hidden`). O pipeline gera um único
-              `-tail.jpg`, extraído do master 16:9. Em retrato o capítulo
-              anterior não estava exibindo aquele quadro: estava exibindo a
-              composição 9:16, que é outro enquadramento, com o frasco em
-              outro lugar da tela. Dissolver de uma imagem que não é a que
-              estava lá chama MAIS atenção para a emenda do que um corte seco,
-              porque o olho vê o produto saltar de posição. O corte fica, e a
-              cor de ambiente continua costurando os dois capítulos.
-
-              A correção completa é gerar `-tail-vertical.jpg` no
-              `build-cinema-media.mjs` a partir do master 9:16 já composto. */}
-          {matchFrom && !prefersReducedMotion ? (
-            <Image
-              src={matchFrom}
-              alt=""
-              aria-hidden="true"
-              fill
-              sizes="100vw"
-              className="object-cover portrait:hidden"
-              style={{
-                zIndex: 1,
-                opacity: "clamp(0, calc((0.12 - var(--p)) / 0.12), 1)",
-              }}
-            />
+              ART DIRECTION, pelo mesmo motivo do poster: a emenda é com o que
+              ESTAVA NA TELA, e isso depende da orientação. Em paisagem o
+              capítulo anterior terminou no master 16:9; em retrato terminou na
+              composição 9:16, que é outro enquadramento, com o frasco em outro
+              lugar da tela. Servir o quadro errado faria o produto saltar de
+              posição — e um salto chama MAIS atenção para a emenda do que um
+              corte seco chamaria. Por isso são dois arquivos, escolhidos pela
+              mesma media query do poster e do vídeo. */}
+          {matchClip && !prefersReducedMotion ? (
+            <picture>
+              <source
+                media="(max-aspect-ratio: 3/4)"
+                srcSet={matchClip.tailVertical}
+                width={1080}
+                height={1920}
+              />
+              <img
+                src={matchClip.tail}
+                alt=""
+                aria-hidden="true"
+                width={1920}
+                height={1080}
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{
+                  zIndex: 1,
+                  opacity: "clamp(0, calc((0.12 - var(--p)) / 0.12), 1)",
+                }}
+              />
+            </picture>
           ) : null}
         </div>
 

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { getLineBySlug, lines } from "@/catalog/lines";
 import { CinematicChapter } from "@/cinema/CinematicChapter";
 import { CinematicHero } from "@/cinema/CinematicHero";
-import { clip } from "@/cinema/clips";
 import { openGraphFor, site } from "@/config/site";
 import { LineCard } from "@/ui/LineCard";
 
@@ -64,7 +63,7 @@ export default function Home() {
         title="Uma nota não é um cheiro. É uma decisão."
         lede="Sessenta e uma notas atravessam as sete linhas. Três aparecem em mais de uma — e é onde as três se cruzam que a casa se reconhece."
         cta={{ href: "/notas", label: "Ver o guia de notas" }}
-        matchFrom={clip("concreto").tail}
+        matchFrom="concreto"
       />
 
       {/* Exigência da seção 26 do prompt mestre: conteúdo provisório precisa
@@ -137,7 +136,7 @@ export default function Home() {
         eyebrow="Material"
         title="Vidro maciço, metal escovado"
         lede="Faces retas que não escondem o líquido. A tampa em champanhe é a única peça que a mão encontra fria."
-        matchFrom={clip("salao-luz").tail}
+        matchFrom="salao-luz"
         runway={240}
       />
 

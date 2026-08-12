@@ -103,13 +103,21 @@ test.describe("capítulos cinematográficos", () => {
     expect(arquivo).toContain("galeria");
   });
 
-  test("o match cut só existe em paisagem", async ({ page }) => {
+  test("o match cut usa o quadro do enquadramento que estava na tela", async ({
+    page,
+  }) => {
     await page.goto("/");
 
-    // O pipeline gera um único `-tail.jpg`, extraído do master 16:9. Em
-    // retrato o capítulo anterior exibiu a composição 9:16 — outro
-    // enquadramento —, então dissolver daquele quadro mostraria o produto
-    // saltando de posição. O corte seco é o comportamento correto ali.
+    // O que este caso protege é a PREMISSA do match cut: dissolver do último
+    // quadro do capítulo anterior só costura a emenda se for o quadro que a
+    // pessoa realmente viu. Em retrato ela viu a composição 9:16, que é outro
+    // enquadramento, com o frasco em outro lugar da tela — servir ali o
+    // quadro 16:9 faria o produto saltar de posição, e um salto chama MAIS
+    // atenção para a emenda do que um corte seco chamaria.
+    //
+    // A verificação é por `currentSrc`, e não por `src`: com art direction em
+    // <picture> o atributo `src` do <img> continua sendo o 16:9 em qualquer
+    // orientação — quem revela a escolha do navegador é `currentSrc`.
     const emRetrato = await page.evaluate(
       () => window.matchMedia("(orientation: portrait)").matches,
     );
@@ -117,10 +125,26 @@ test.describe("capítulos cinematográficos", () => {
     const quadroDeEmenda = page.locator('img[src*="concreto-tail"]').first();
     await expect(quadroDeEmenda).toBeAttached();
 
+    // Agora aparece nas DUAS orientações — cada uma com o seu quadro.
     const visivel = await quadroDeEmenda.evaluate(
       (el) => getComputedStyle(el).display !== "none",
     );
-    expect(visivel).toBe(!emRetrato);
+    expect(visivel).toBe(true);
+
+    // Ancorado no fim do caminho, e não por `contains`:
+    // "concreto-tail-vertical.jpg" contém "concreto-tail.jpg" como prefixo do
+    // nome, então uma checagem de substring passaria com o arquivo errado.
+    const esperado = emRetrato
+      ? "concreto-tail-vertical.jpg"
+      : "concreto-tail.jpg";
+
+    await expect
+      .poll(
+        () =>
+          quadroDeEmenda.evaluate((el: HTMLImageElement) => el.currentSrc),
+        { timeout: 15_000 },
+      )
+      .toMatch(new RegExp(`/${esperado.replace(/\./g, "\\.")}$`));
   });
 
   test("movimento reduzido: os seis capítulos viram composição estática", async ({

@@ -24,9 +24,12 @@
  *   granularidade cai para meio segundo, ao custo de algum tamanho. É a troca
  *   que torna o scrub viável.
  *
- * — ÚLTIMO QUADRO como imagem: serve às transições de continuidade entre
- *   capítulos (§7), em que o fim de um vídeo precisa coincidir visualmente
- *   com o início da seção seguinte.
+ * — ÚLTIMO QUADRO como imagem, NOS DOIS ENQUADRAMENTOS: serve às transições
+ *   de continuidade entre capítulos (§7), em que o fim de um vídeo precisa
+ *   coincidir visualmente com o início da seção seguinte. Precisa existir em
+ *   16:9 e em 9:16 porque a continuidade é com o que ESTAVA NA TELA, e o que
+ *   estava na tela depende da orientação: quem assistiu ao capítulo anterior
+ *   em retrato viu a composição vertical, não o master widescreen.
  *
  * Uso: npm run media:cinema
  */
@@ -256,6 +259,30 @@ async function main() {
       tail,
     ]);
 
+    // O mesmo último quadro, na composição 9:16. Extraído do master pelo
+    // MESMO filtro do vídeo vertical, e não recortado do `-tail.jpg`: um
+    // recorte não teria a extensão desfocada, e a emenda entregaria uma
+    // imagem que nunca esteve na tela.
+    const tailVertical = path.join(OUTPUT_DIR, `${slug}-tail-vertical.jpg`);
+    await run("ffmpeg", [
+      "-y",
+      "-v",
+      "error",
+      "-ss",
+      String(Math.max(0, duration - 0.08)),
+      "-i",
+      source,
+      "-filter_complex",
+      VERTICAL_FILTER,
+      "-map",
+      "[v]",
+      "-frames:v",
+      "1",
+      "-q:v",
+      "4",
+      tailVertical,
+    ]);
+
     manifest.push({ slug, duration: Number(duration.toFixed(3)) });
     console.log(`${slug}: ${duration.toFixed(2)}s`);
   }
@@ -271,6 +298,7 @@ async function main() {
     poster: "/media/cinema/${clip.slug}-poster.jpg",
     posterVertical: "/media/cinema/${clip.slug}-poster-vertical.jpg",
     tail: "/media/cinema/${clip.slug}-tail.jpg",
+    tailVertical: "/media/cinema/${clip.slug}-tail-vertical.jpg",
   },`,
     )
     .join("\n");
@@ -298,6 +326,8 @@ export type CinemaClip = {
   posterVertical: string;
   /** Último quadro — ponto de continuidade com a seção seguinte. */
   tail: string;
+  /** O mesmo último quadro em 9:16 — a continuidade vista em retrato. */
+  tailVertical: string;
 };
 
 export const CLIPS = {

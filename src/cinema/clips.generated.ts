@@ -19,6 +19,8 @@ export type CinemaClip = {
   posterVertical: string;
   /** Último quadro — ponto de continuidade com a seção seguinte. */
   tail: string;
+  /** O mesmo último quadro em 9:16 — a continuidade vista em retrato. */
+  tailVertical: string;
 };
 
 export const CLIPS = {
@@ -31,6 +33,7 @@ export const CLIPS = {
     poster: "/media/cinema/salao-luz-poster.jpg",
     posterVertical: "/media/cinema/salao-luz-poster-vertical.jpg",
     tail: "/media/cinema/salao-luz-tail.jpg",
+    tailVertical: "/media/cinema/salao-luz-tail-vertical.jpg",
   },
   "pedra-vapor": {
     slug: "pedra-vapor",
@@ -41,6 +44,7 @@ export const CLIPS = {
     poster: "/media/cinema/pedra-vapor-poster.jpg",
     posterVertical: "/media/cinema/pedra-vapor-poster-vertical.jpg",
     tail: "/media/cinema/pedra-vapor-tail.jpg",
+    tailVertical: "/media/cinema/pedra-vapor-tail-vertical.jpg",
   },
   "concreto": {
     slug: "concreto",
@@ -51,6 +55,7 @@ export const CLIPS = {
     poster: "/media/cinema/concreto-poster.jpg",
     posterVertical: "/media/cinema/concreto-poster-vertical.jpg",
     tail: "/media/cinema/concreto-tail.jpg",
+    tailVertical: "/media/cinema/concreto-tail-vertical.jpg",
   },
   "galeria": {
     slug: "galeria",
@@ -61,6 +66,7 @@ export const CLIPS = {
     poster: "/media/cinema/galeria-poster.jpg",
     posterVertical: "/media/cinema/galeria-poster-vertical.jpg",
     tail: "/media/cinema/galeria-tail.jpg",
+    tailVertical: "/media/cinema/galeria-tail-vertical.jpg",
   },
   "travertino": {
     slug: "travertino",
@@ -71,6 +77,7 @@ export const CLIPS = {
     poster: "/media/cinema/travertino-poster.jpg",
     posterVertical: "/media/cinema/travertino-poster-vertical.jpg",
     tail: "/media/cinema/travertino-tail.jpg",
+    tailVertical: "/media/cinema/travertino-tail-vertical.jpg",
   },
   "pedestal-ambar": {
     slug: "pedestal-ambar",
@@ -81,6 +88,7 @@ export const CLIPS = {
     poster: "/media/cinema/pedestal-ambar-poster.jpg",
     posterVertical: "/media/cinema/pedestal-ambar-poster-vertical.jpg",
     tail: "/media/cinema/pedestal-ambar-tail.jpg",
+    tailVertical: "/media/cinema/pedestal-ambar-tail-vertical.jpg",
   },
 } as const satisfies Record<string, CinemaClip>;
 
