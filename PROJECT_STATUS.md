@@ -182,22 +182,52 @@ composição vertical própria para celular; sistema de movimento (`--motion-*`,
 `--ease-*`) e escala de camadas (`--layer-*`); pipeline `npm run media:cinema`
 gerando 4 variantes dos 6 clipes.
 
-**Ordem acordada com o proprietário para a retomada:**
+### Retomada de 2026-08-12 — os cinco itens acordados
 
-1. **Rolagem inercial.** É a maior diferença sensorial entre o site e as
-   referências — elas usam scroll suavizado, e a rolagem nativa entrega saltos
-   discretos de roda. É o único caso até aqui em que uma dependência se
-   justifica: reimplementar à mão exige sequestrar o evento de roda e
-   reposicionar por transform, que é onde se quebram teclado, âncoras,
-   histórico e leitor de tela. Lenis (~3 KB gzip) preserva o scroll nativo por
-   baixo. Com gate de `prefers-reduced-motion`.
-2. **Capítulo 02 completo** (`galeria`), com match cut a partir do `-tail.jpg`
-   do `concreto` — as imagens de último quadro já existem para isso e ainda
-   não são usadas. Validar a linguagem ANTES de replicar.
-3. Conferência visual do par hero → capítulo 02 pelo proprietário.
-4. Replicar nos capítulos 03 a 06.
-5. Faixa de 768–1200 px, onde a manchete se sobrepõe ao frasco: o `concreto`
-   tem o produto centrado e, nessa largura, texto e produto disputam o espaço.
+Os itens 1, 2, 4 e 5 estão **feitos**. O item 3 é conferência do proprietário
+e continua aberto por natureza.
+
+| # | Item | Estado | Verificação |
+|---|---|---|---|
+| 1 | Rolagem inercial (Lenis) | **Feito** (`75b4de1`) | 5 cliques de roda de 200 px: salto máximo por quadro caiu de 200 para **22 px**. Teclado real por CDP: PageDown 630 com Lenis e 630 sem, ArrowDown ×5 = 200, Space 630, End 4639. Skip link foca e leva ao `#conteudo`. Sob `prefers-reduced-motion` a instância é destruída e `html.lenis` sai da árvore |
+| 2 | Capítulo 02 (`galeria`) com match cut | **Feito** (`cf0cf04`) | `--p` 0,8125 → `currentTime` 6,50 s (0,8125 × 8 s) |
+| 3 | Conferência de ritmo pelo proprietário | **Aberto** | Só o proprietário julga. Ver "A decidir" abaixo |
+| 4 | Capítulos 03 a 06 | **Feito** (`cf0cf04`) | Os 6 clipes estão na home; 10 casos E2E novos, desktop e mobile |
+| 5 | Faixa de 768–1200 px | **Feito** (`cf0cf04`) | Scrim **lateral** do lado do texto, no hero e nos capítulos |
+
+**`src/cinema/CinematicChapter.tsx`** generaliza o hero, com três gestos
+extraídos das quatro referências. O que se copia é a linguagem de movimento,
+não layout nem identidade:
+
+1. **Match cut** — o capítulo abre exibindo o último quadro do anterior e
+   dissolve dele. Só onde os capítulos são ADJACENTES (02 e 04): anunciar
+   continuidade com uma seção de conteúdo no meio mostraria a imagem errada
+   dissolvendo. As `-tail.jpg` já existiam e nunca tinham sido usadas.
+2. **Recuo para moldura** — a mídia sangra até a borda e recua para uma moldura
+   arredondada por `clip-path`, revelando a cor de ambiente. O espaço negativo
+   não é decidido no layout: é criado pelo movimento.
+3. **Tipografia que cede** — entra em 0,04–0,20, permanece no miolo, sai em
+   0,58–0,82 por opacidade E deslocamento.
+
+**Carga sob demanda** (`useArmWhenNear`): seis clipes de 3 a 6 MB seriam ~30 MB
+para ver a primeira tela. O `<video>` só monta quando o capítulo se aproxima;
+até lá o poster sustenta a composição. Medido em aba nova: **1 vídeo na
+abertura**, 2 no capítulo 02. O caso E2E que conta vídeos montados foi
+verificado por reintrodução da falha — com o hook armado de saída ele fica
+vermelho com `unexpected value 6`.
+
+**Match cut fica fora do retrato.** O pipeline gera um único `-tail.jpg`,
+extraído do master 16:9, e em retrato o capítulo anterior exibiu a composição
+9:16 — outro enquadramento. Dissolver de um quadro diferente faz o produto
+saltar de posição, o que chama mais atenção para a emenda do que um corte
+seco. **Correção completa pendente:** gerar `-tail-vertical.jpg` no
+`scripts/build-cinema-media.mjs` a partir do master 9:16 já composto.
+
+**A decidir pelo proprietário — ritmo.** A home passou a ter **19 telas de
+altura** (17 252 px a 910 px de viewport), efeito de seis capítulos com trilho
+de 220 a 320 svh. Reduzir os trilhos encurta a página e acelera a câmera;
+manter privilegia o peso cinematográfico. Não há resposta técnica: depende de
+rolar e sentir.
 
 **Atribuição dos 6 clipes**, derivada do que cada um faz de melhor:
 
