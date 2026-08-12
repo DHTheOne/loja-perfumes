@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { siteOrigin } from "@/config/origin";
 import { BagProvider } from "@/bag/BagProvider";
+import { SmoothScroll } from "@/cinema/SmoothScroll";
 import { site, socialImage } from "@/config/site";
 import { SiteHeader } from "@/ui/SiteHeader";
 import { SiteFooter } from "@/ui/SiteFooter";
@@ -79,6 +80,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={`${display.variable} ${body.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-void text-ink">
+        {/* Rolagem inercial em todo o site. Não renderiza nada — só liga o
+            laço que interpola a posição do documento, e só quando o sistema
+            não pede movimento reduzido. */}
+        <SmoothScroll />
         {/* O provedor envolve header e conteúdo porque os dois leem a sacola:
             o contador no header e a conferência em /sacola. É o único estado
             de cliente global do site. */}
