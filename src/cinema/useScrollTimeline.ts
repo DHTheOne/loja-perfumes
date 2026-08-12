@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type RefObject } from "react";
+import { useEffect, useState, useSyncExternalStore, type RefObject } from "react";
 
 /**
  * Converte a posição de um elemento na rolagem em progresso de 0 a 1.
@@ -127,4 +127,69 @@ export function useScrollTimeline(
       stop();
     };
   }, [ref, onProgress, smoothing, enabled, staticProgress]);
+}
+
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onChange: () => void): () => void {
+  const query = window.matchMedia(REDUCED_MOTION);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+/**
+ * Preferência de movimento reduzido, reativa.
+ *
+ * No SERVIDOR assume-se `true`: o HTML sai na composição estática, sem vídeo.
+ * Assumir o contrário faria o servidor emitir a marcação animada para todo
+ * mundo, e quem pediu movimento reduzido veria a versão animada até a
+ * hidratação corrigir — exatamente o instante em que a preferência mais
+ * importa.
+ */
+export function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => true,
+  );
+}
+
+/**
+ * Arma um capítulo quando ele se aproxima da viewport, e nunca mais desarma.
+ *
+ * É o que impede a home de baixar seis vídeos na abertura. Cada clipe pesa de
+ * 3 a 6 MB; montar todos de uma vez seriam ~30 MB para ver a primeira tela.
+ * Enquanto o capítulo não é armado, quem sustenta a composição é o poster
+ * (dezenas de KB), que já sai do servidor.
+ *
+ * Não desarma na saída de propósito: descarregar o vídeo de um capítulo já
+ * visitado faria a rolagem de volta reencontrar um retângulo sem quadro,
+ * esperando decodificação de novo. O custo de manter é memória; o de
+ * descarregar é a experiência quebrar ao subir.
+ *
+ * Diferente do observador de `useScrollTimeline`, este muda ESTADO do React —
+ * uma vez por capítulo, na aproximação, não a cada quadro.
+ */
+export function useArmWhenNear(
+  ref: RefObject<HTMLElement | null>,
+  rootMargin = "100% 0px 100% 0px",
+): boolean {
+  const [armed, setArmed] = useState(false);
+
+  useEffect(() => {
+    if (armed) return;
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setArmed(true);
+      },
+      { rootMargin },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref, rootMargin, armed]);
+
+  return armed;
 }

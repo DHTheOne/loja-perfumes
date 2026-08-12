@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useRef, useSyncExternalStore } from "react";
+import { useCallback, useRef } from "react";
 
 import { artDirection, clip, type ClipSlug } from "@/cinema/clips";
-import { useScrollTimeline } from "@/cinema/useScrollTimeline";
+import {
+  usePrefersReducedMotion,
+  useScrollTimeline,
+} from "@/cinema/useScrollTimeline";
 
 /**
  * Hero cinematográfico: a rolagem é a linha do tempo do vídeo.
@@ -28,17 +31,6 @@ import { useScrollTimeline } from "@/cinema/useScrollTimeline";
  * ~50 KB para reimplementar exatamente isso.
  */
 
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
-
-function subscribeReducedMotion(onChange: () => void): () => void {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-
-/** No servidor assumimos movimento reduzido: o HTML sai na composição estática. */
-const getServerSnapshot = () => true;
-
 type CinematicHeroProps = {
   slug: ClipSlug;
   eyebrow: string;
@@ -60,11 +52,7 @@ export function CinematicHero({
   const videoRef = useRef<HTMLVideoElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
 
-  const prefersReducedMotion = useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    getServerSnapshot,
-  );
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const media = clip(slug);
   const art = artDirection(slug);
@@ -229,6 +217,23 @@ export function CinematicHero({
             background:
               "linear-gradient(to bottom, rgb(10 9 8 / 0.75) 0%, transparent 32%, transparent 45%, rgb(10 9 8 / 0.88) 100%)",
             opacity: "calc(0.7 + var(--p) * 0.3)",
+          }}
+        />
+
+        {/* Scrim lateral do lado da manchete — mesma correção aplicada aos
+            capítulos, pela mesma falha medida: entre ~768 e ~1200 px o
+            `concreto` tem o frasco centrado e a manchete o atravessa. O
+            gradiente acima escurece a BASE, e a manchete vive na altura
+            média. Escurecer só a coluna de leitura preserva o contraste
+            original do lado do produto. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            zIndex: "var(--layer-grade)",
+            background: `linear-gradient(to right,
+              rgb(10 9 8 / 0.66) 0%, rgb(10 9 8 / 0.32) 34%, transparent 58%)`,
+            opacity: "calc(0.5 + var(--p) * 0.3)",
           }}
         />
 
