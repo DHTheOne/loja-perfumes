@@ -30,9 +30,15 @@ export function SiteHeader() {
       />
 
       <div className="relative mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-6 md:px-12">
+        {/* `shrink-0` é o que impede a colisão, e não o tamanho da fonte.
+            Num flex container o item encolhe abaixo da largura do próprio
+            conteúdo quando falta espaço — a caixa do wordmark ficava menor que
+            a palavra e o texto vazava por cima da navegação. Verificado em
+            375 px (iPhone SE, 11 mini): "sillage" sobre "COLEÇÕES". A correção
+            anterior mediu 390 px, onde ainda cabia por alguns pixels. */}
         <Link
           href="/"
-          className="font-display text-2xl font-medium lowercase tracking-[0.08em] text-ink transition-colors duration-300 hover:text-champagne"
+          className="shrink-0 font-display text-xl font-medium lowercase tracking-[0.08em] text-ink transition-colors duration-300 hover:text-champagne sm:text-2xl"
         >
           {site.name}
           <span className="sr-only"> — página inicial</span>
@@ -45,7 +51,7 @@ export function SiteHeader() {
             resolveria a largura tirando navegação de quem tem menos espaço
             para procurá-la; apertar o respiro custa só respiro. */}
         <nav aria-label="Navegação principal">
-          <ul className="flex items-center gap-4 md:gap-8">
+          <ul className="flex items-center gap-3 sm:gap-4 md:gap-8">
             {navItems.map((item) => (
               <li key={item.href}>
                 {/* `inline-flex` + `py-3.5` levam a área clicável a ~44px de
