@@ -172,6 +172,48 @@ Aplicação inicializada conforme `ARCHITECTURE.md` e ADR-0001.
       / 92,75% de linhas, com piso de 80% travado no `vitest.config.mts`;
       `src/3d` segue fora do denominador e é coberto pelo E2E
 
+## Experiência cinematográfica — branch `feat/cinematic-scroll`
+
+Trabalho em andamento, isolado da `feat/loja-perfumes`. Commits: `c91c361`
+(hero com scrub por rolagem) e `c33888e` (composição 9:16 e header no celular).
+
+**Feito:** capítulo 01 (hero) com a rolagem controlando o clipe `concreto`;
+composição vertical própria para celular; sistema de movimento (`--motion-*`,
+`--ease-*`) e escala de camadas (`--layer-*`); pipeline `npm run media:cinema`
+gerando 4 variantes dos 6 clipes.
+
+**Ordem acordada com o proprietário para a retomada:**
+
+1. **Rolagem inercial.** É a maior diferença sensorial entre o site e as
+   referências — elas usam scroll suavizado, e a rolagem nativa entrega saltos
+   discretos de roda. É o único caso até aqui em que uma dependência se
+   justifica: reimplementar à mão exige sequestrar o evento de roda e
+   reposicionar por transform, que é onde se quebram teclado, âncoras,
+   histórico e leitor de tela. Lenis (~3 KB gzip) preserva o scroll nativo por
+   baixo. Com gate de `prefers-reduced-motion`.
+2. **Capítulo 02 completo** (`galeria`), com match cut a partir do `-tail.jpg`
+   do `concreto` — as imagens de último quadro já existem para isso e ainda
+   não são usadas. Validar a linguagem ANTES de replicar.
+3. Conferência visual do par hero → capítulo 02 pelo proprietário.
+4. Replicar nos capítulos 03 a 06.
+5. Faixa de 768–1200 px, onde a manchete se sobrepõe ao frasco: o `concreto`
+   tem o produto centrado e, nessa largura, texto e produto disputam o espaço.
+
+**Atribuição dos 6 clipes**, derivada do que cada um faz de melhor:
+
+| Capítulo | Clipe | Razão |
+|---|---|---|
+| 01 Hero | `concreto` ✔ | Único com movimento monotônico — o scrub não inverte |
+| 02 Essência | `galeria` | Maior amplitude de escala; o recuo CRIA o espaço negativo onde as notas entram |
+| 03 Atmosfera | `salao-luz` | Termina limpo sobre quase-preto — emenda com `--surface-void` sem corte |
+| 04 Material | `pedra-vapor` | Vapor contínuo: laço ambiente que não compete com o texto |
+| 05 Editorial | `travertino` | O único quase estático — aceita tipografia por cima |
+| 06 Fechamento | `pedestal-ambar` | Coluna vertical de luz vira eixo central para o CTA |
+
+**Regra reafirmada pelo proprietário:** as referências valem pela linguagem de
+movimento e fluidez, não por cópia de layout, identidade ou composição — são
+sites comerciais reais.
+
 ## Próximo passo
 
 1. Proprietário aprova (ou substitui) o wordmark provisório "Sillage" e os
