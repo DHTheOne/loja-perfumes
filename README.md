@@ -1,4 +1,4 @@
-# loja-perfumes ������
+# loja-perfumes
 
 > **E-commerce premium de perfumes** com experiência 3D cinematográfica imersiva — Next.js 16, React 19, Three.js, scroll-driven animations.
 
@@ -24,7 +24,7 @@
 
 ## Funcionalidades Implementadas
 
-### ��� Experiência Cinematográfica (Branch `feat/cinematic-scroll`)
+### Experiência Cinematográfica (Branch `feat/cinematic-scroll`)
 - **Hero com scrub por rolagem** — vídeo `concreto` controlado via `animation-timeline: view()`
 - **6 capítulos** com *match cut* entre transições (dissolve do último quadro do anterior)
 - **Match cut em retrato (9:16)** — composição vertical dedicada, não recorte
@@ -33,21 +33,21 @@
 - **Carga sob demanda** (`useArmWhenNear`) — só 1 vídeo na abertura, 2 no capítulo 2
 - **Pipeline de mídia**: `npm run media:cinema` gera 4 variantes (desktop/mobile/poster/tail) por clipe
 
-### ��� 3D Procedural (Three.js + React Three Fiber + Drei)
+### 3D Procedural (Three.js + React Three Fiber + Drei)
 - **Frasco procedural** (`Bottle.tsx`) — geometria paramétrica, parede 0.055 com `backside`
 - **Cavidade interna** + líquido colorido por linha (atenuação 0.22 vs 5.5 da parede)
 - **StudioEnvironment** — backdrop de estúdio, névoa 6..11, `envMapIntensity` 1.6
 - **Fallback sem WebGL** + `prefers-reduced-motion` + detecção de dispositivo fraco
 - **Carregamento tardio** — three.js (968 KB) fora dos 8 chunks iniciais da home
 
-### ��� E-commerce Core
+### E-commerce Core
 - Catálogo estático: 7 linhas com atributos completos de perfumaria (família, notas topo/coração/fundo, concentração, volume, ocasião, estação, intensidade, duração)
 - Filtros por família e ocasião em `/colecoes` (URL como estado, parsers com allowlist)
 - Páginas de produto SSG (`/perfumes/[slug]`) com JSON-LD `Product` (PreOrder)
 - Sacola persistente (`localStorage` + `useSyncExternalStore`), preço lido do catálogo
 - Checkout em `/sacola/checkout` — lista pendências reais (sem formulário que descarta dados)
 
-### ������ Qualidade & Engenharia
+### Qualidade & Engenharia
 | Área | Implementação |
 |------|---------------|
 | **Testes** | 77 unitários (Vitest, 92.15% statements / 92.75% lines) + 18 E2E (Playwright desktop/mobile) |
@@ -97,12 +97,12 @@ loja-perfumes/
 ├── SECURITY_PLAN.md        # LGPD, secrets, headers, CSP
 ├── DATABASE_SCHEMA.md      # Schema Prisma/PostgreSQL planejado
 ├── DEPLOYMENT.md           # Vercel + Mercado Pago + variáveis
-��── RELATORIO_ANALISE_ALTERACOES_2026-08-07.txt
+├── RELATORIO_ANALISE_ALTERACOES_2026-08-07.txt
 ```
 
 ---
 
-## ������ Scripts Disponíveis
+## Scripts Disponíveis
 
 ```bash
 # Desenvolvimento
@@ -124,7 +124,7 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 
 ---
 
-## ��� Decisões Arquiteturais (ADRs)
+## Decisões Arquiteturais (ADRs)
 
 | ADR | Título | Decisão |
 |-----|--------|---------|
@@ -135,7 +135,7 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 
 ---
 
-## ������ Riscos Abertos & Próximos Passos
+## Riscos Abertos & Próximos Passos
 
 ### Riscos de Lançamento (não bloqueiam desenvolvimento)
 - **R5:** Textos legais sem revisão profissional (minutas com banner obrigatório)
@@ -152,13 +152,13 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 5. Nomes das 7 linhas de fragrância (proposta em `MEDIA_PLAN.md` §5)
 
 ### Próximos Passos Imediatos
-1. ����� **Aprovar/substituir wordmark "Sillage" e nomes de linha** — agora visíveis no site
-2. ��� **Regerar vídeo do hero com frasco mestre** (`_master-bottle.png` como referência)
-3. ��� **Backup externo de mídia** — nuvem, disco removível ou object storage
+1. **Aprovar/substituir wordmark "Sillage" e nomes de linha** — agora visíveis no site
+2. **Regerar vídeo do hero com frasco mestre** (`_master-bottle.png` como referência)
+3. **Backup externo de mídia** — nuvem, disco removível ou object storage
 
 ---
 
-## ��� Deploy
+## Deploy
 
 - **Vercel** (configurado em `DEPLOYMENT.md`)
 - Homepage configurada: `https://loja-perfumes.vercel.app`
@@ -167,7 +167,7 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 
 ---
 
-## ��� Documentação Completa
+## Documentação Completa
 
 - [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md) — Visão, escopo, públicos, critérios de sucesso
 - [`PROJECT_STATUS.md`](PROJECT_STATUS.md) — Progresso detalhado por fase, riscos, decisões
@@ -181,10 +181,10 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 
 ---
 
-## ���‍���� Autor
+## Autor
 
 **Dereck** — Desenvolvedor em formação  
-���� Belo Horizonte, MG | ��� Curso técnico em TI  
-���� [GitHub](https://github.com/DHTheOne)
+Belo Horizonte, MG | Curso técnico em TI  
+[GitHub](https://github.com/DHTheOne)
 
 > *Este é meu primeiro projeto comercial. Documentação rigorosa, testes abrangentes e entrega em fases são escolhas deliberadas para garantir sustentabilidade.*
