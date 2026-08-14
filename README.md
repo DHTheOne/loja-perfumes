@@ -1,4 +1,4 @@
-# loja-perfumes ���
+# loja-perfumes ������
 
 > **E-commerce premium de perfumes** com experiência 3D cinematográfica imersiva — Next.js 16, React 19, Three.js, scroll-driven animations.
 
@@ -7,17 +7,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
 [![Three.js](https://img.shields.io/badge/Three.js-r185-black?logo=three.js)](https://threejs.org/)
-[![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?logo=vitest)](https://vitest.dev/)
-[![Playwright](https://img.shields.io/badge/Playwright-1.62-2EAD33?logo=playwright)](https://playwright.dev/)
-[![License](https://img.shields.io/badge/License-Proprietary-red)](LICENSE)
 
 ---
 
-## �� Visão Geral
+## Visão Geral
 
 **loja-perfumes** é meu **primeiro projeto comercial** — uma loja virtual de perfumes com posicionamento premium, destinada a operar comercialmente (não apenas portfólio). O foco é robustez operacional, clareza de manutenção e experiência do usuário refinada.
 
-### ��� Proposta de Experiência
+### Proposta de Experiência
 - **Luxo, exclusividade, elegância, autenticidade, desejo, qualidade, segurança**
 - Direção visual: fundo escuro/neutro sofisticado, detalhes metálicos, vidro, reflexos, iluminação cinematográfica
 - Tipografia editorial, amplo espaço negativo, microinterações refinadas
@@ -25,7 +22,7 @@
 
 ---
 
-## ��� Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
 ### ��� Experiência Cinematográfica (Branch `feat/cinematic-scroll`)
 - **Hero com scrub por rolagem** — vídeo `concreto` controlado via `animation-timeline: view()`
@@ -43,14 +40,14 @@
 - **Fallback sem WebGL** + `prefers-reduced-motion` + detecção de dispositivo fraco
 - **Carregamento tardio** — three.js (968 KB) fora dos 8 chunks iniciais da home
 
-### ������ E-commerce Core
+### ��� E-commerce Core
 - Catálogo estático: 7 linhas com atributos completos de perfumaria (família, notas topo/coração/fundo, concentração, volume, ocasião, estação, intensidade, duração)
 - Filtros por família e ocasião em `/colecoes` (URL como estado, parsers com allowlist)
 - Páginas de produto SSG (`/perfumes/[slug]`) com JSON-LD `Product` (PreOrder)
 - Sacola persistente (`localStorage` + `useSyncExternalStore`), preço lido do catálogo
 - Checkout em `/sacola/checkout` — lista pendências reais (sem formulário que descarta dados)
 
-### ��� Qualidade & Engenharia
+### ������ Qualidade & Engenharia
 | Área | Implementação |
 |------|---------------|
 | **Testes** | 77 unitários (Vitest, 92.15% statements / 92.75% lines) + 18 E2E (Playwright desktop/mobile) |
@@ -63,7 +60,7 @@
 
 ---
 
-## ��� Estrutura Principal
+## Estrutura Principal
 
 ```
 loja-perfumes/
@@ -155,7 +152,7 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 5. Nomes das 7 linhas de fragrância (proposta em `MEDIA_PLAN.md` §5)
 
 ### Próximos Passos Imediatos
-1. �� **Aprovar/substituir wordmark "Sillage" e nomes de linha** — agora visíveis no site
+1. ����� **Aprovar/substituir wordmark "Sillage" e nomes de linha** — agora visíveis no site
 2. ��� **Regerar vídeo do hero com frasco mestre** (`_master-bottle.png` como referência)
 3. ��� **Backup externo de mídia** — nuvem, disco removível ou object storage
 
@@ -186,8 +183,8 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 
 ## ���‍���� Autor
 
-**Dereck** — Desenvolvedor Frontend em formação  
+**Dereck** — Desenvolvedor em formação  
 ���� Belo Horizonte, MG | ��� Curso técnico em TI  
-���� [GitHub](https://github.com/DHTheOne) | [LinkedIn](https://linkedin.com/in/seu-usuario)
+���� [GitHub](https://github.com/DHTheOne)
 
 > *Este é meu primeiro projeto comercial. Documentação rigorosa, testes abrangentes e entrega em fases são escolhas deliberadas para garantir sustentabilidade.*
