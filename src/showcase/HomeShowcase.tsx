@@ -10,7 +10,7 @@ import {
 } from "react";
 
 import { formatPriceBRL, startingPriceCents } from "@/catalog/lines";
-import { usePrefersReducedMotion } from "@/cinema/useScrollTimeline";
+import { usePrefersReducedMotion } from "@/cinema/usePrefersReducedMotion";
 import { SceneTrait } from "@/showcase/SceneTrait";
 import { buildScenes, type ShowcaseScene } from "@/showcase/sequence";
 
