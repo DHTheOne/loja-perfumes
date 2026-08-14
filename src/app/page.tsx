@@ -3,9 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { getLineBySlug, lines } from "@/catalog/lines";
-import { CinematicChapter } from "@/cinema/CinematicChapter";
-import { CinematicHero } from "@/cinema/CinematicHero";
 import { openGraphFor, site } from "@/config/site";
+import { HomeShowcase } from "@/showcase/HomeShowcase";
 import { LineCard } from "@/ui/LineCard";
 
 export const metadata: Metadata = {
@@ -32,39 +31,15 @@ export default function Home() {
 
   return (
     <main id="conteudo">
-      {/* ——— Capítulo 01 — Hero cinematográfico ———
-          A rolagem percorre a cena: a câmera atravessa o concreto em direção
-          ao frasco enquanto a manchete cede lugar. O último quadro do clipe é
-          um close do vidro sobre fundo escuro, que é justamente o estado em
-          que a seção seguinte começa — a transição entre capítulos não é um
-          corte, é a continuação da mesma luz. */}
-      <CinematicHero
-        slug="concreto"
-        eyebrow="Coleção de estreia"
-        title="O que fica depois da presença"
-        lede="Sete fragrâncias originais, compostas para durar no tecido e na memória. Frascos de vidro maciço, produzidos em série limitada."
-        ctaHref="/colecoes"
-        ctaLabel="Ver a coleção"
-      />
+      {/* ——— Abertura ———
+          Os seis clipes como UMA sequência, não como seis vídeos com trilho de
+          rolagem cada um. A câmera anda sozinha; a rolagem serve para SAIR da
+          apresentação, não para conduzi-la — e sair é o único fim que ela tem,
+          porque a sequência não termina, dá a volta.
 
-      {/* ——— Capítulo 02 — Essência ———
-          MATCH CUT a partir do `concreto`. Este capítulo encosta no anterior
-          sem nada entre os dois, então o último quadro do hero é literalmente
-          o que está na tela quando o trilho do 02 começa — e é essa imagem que
-          `matchFrom` exibe antes de dissolver na galeria. Emenda invisível.
-
-          O `galeria` foi escolhido aqui por ter a maior amplitude de escala do
-          conjunto: a câmera recua e o recuo CRIA o espaço negativo em que o
-          texto entra. O movimento produz a composição, e não o contrário. */}
-      <CinematicChapter
-        slug="galeria"
-        index="02"
-        eyebrow="Essência"
-        title="Uma nota não é um cheiro. É uma decisão."
-        lede="Sessenta e uma notas atravessam as sete linhas. Três aparecem em mais de uma — e é onde as três se cruzam que a casa se reconhece."
-        cta={{ href: "/notas", label: "Ver o guia de notas" }}
-        matchFrom="concreto"
-      />
+          O pareamento cena↔perfume e a afinação de cada emenda vivem em
+          `src/showcase/sequence.ts`. */}
+      <HomeShowcase />
 
       {/* Exigência da seção 26 do prompt mestre: conteúdo provisório precisa
           estar claramente identificado como fictício. */}
@@ -72,8 +47,11 @@ export default function Home() {
         {site.demoNotice}
       </p>
 
-      {/* ——— As linhas ——— */}
+      {/* ——— As linhas ———
+          `id` porque agora é destino: a abertura não termina numa chamada, ela
+          dá a volta, e descer até aqui é o que a encerra. */}
       <section
+        id="catalogo"
         aria-labelledby="linhas-heading"
         className="mx-auto w-full max-w-7xl px-6 md:px-12"
         style={{ paddingBlock: "var(--space-section)" }}
@@ -104,41 +82,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      {/* ——— Capítulo 03 — Atmosfera ———
-          Sem match cut: entre este capítulo e o 02 existe a grade das linhas,
-          então o último quadro do 02 não é o que está na tela quando o 03
-          começa. Anunciar continuidade onde ela não existe seria pior que
-          corte seco — o olho percebe a imagem errada dissolvendo.
-
-          O `salao-luz` termina limpo sobre quase-preto, o que emenda com
-          `--surface-void` sem precisar de corte. */}
-      <CinematicChapter
-        slug="salao-luz"
-        index="03"
-        eyebrow="Atmosfera"
-        title="O rastro chega antes de você"
-        lede="Sillage é o nome do que um perfume deixa no ar depois que a pessoa já passou. É o que a casa persegue: presença que não precisa ser anunciada."
-        runway={240}
-      />
-
-      {/* ——— Capítulo 04 — Material ———
-          MATCH CUT a partir do `salao-luz`: os dois capítulos são adjacentes.
-
-          Este capítulo é a CARTELA DE TÍTULO da seção "A casa" logo abaixo —
-          a estrutura que as quatro referências repetem: manchete sozinha sobre
-          a cena, e o conteúdo detalhado montando em seguida. Por isso ele não
-          leva chamada própria: o link vive na seção que ele apresenta, e dois
-          botões seguidos para o mesmo destino competiriam entre si. */}
-      <CinematicChapter
-        slug="pedra-vapor"
-        index="04"
-        eyebrow="Material"
-        title="Vidro maciço, metal escovado"
-        lede="Faces retas que não escondem o líquido. A tampa em champanhe é a única peça que a mão encontra fria."
-        matchFrom="salao-luz"
-        runway={240}
-      />
 
       {/* ——— A casa ——— */}
       <section
@@ -193,24 +136,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ——— Capítulo 05 — Editorial ———
-          O `travertino` é o único clipe quase estático do conjunto, e é por
-          isso que ele recebe o texto mais longo: cena que se move pouco aceita
-          tipografia por cima sem que as duas disputem a atenção. É também o
-          único com `bias: right` — o frasco fica à direita do quadro, então o
-          bloco de texto vai para a esquerda em vez da base.
-
-          Trilho mais curto (220) exatamente porque a cena é estática: dar 260
-          a um clipe que quase não muda é vender rolagem sem entregar imagem. */}
-      <CinematicChapter
-        slug="travertino"
-        index="05"
-        eyebrow="Editorial"
-        title="Revisados até merecerem o vidro"
-        lede="Não há coleção nova por estação. Cada composição macera por semanas antes do engarrafamento, em lotes pequenos e numerados."
-        runway={220}
-      />
-
       {/* ——— Assinatura ——— */}
       {signature ? (
         <section
@@ -240,22 +165,6 @@ export default function Home() {
         </section>
       ) : null}
 
-      {/* ——— Capítulo 06 — Fechamento ———
-          O `pedestal-ambar` tem uma coluna vertical de luz que vira eixo
-          central da composição, e é o único do conjunto que termina mais
-          quente do que começa. Fecha a página no mesmo lugar onde ela abriu:
-          um frasco, luz, e a chamada.
-
-          Trilho de volta a 260 — o fechamento é o segundo momento (depois do
-          hero) em que a pessoa aceita que a página demore. */}
-      <CinematicChapter
-        slug="pedestal-ambar"
-        index="06"
-        eyebrow="A coleção"
-        title="Comece pelo que fica"
-        lede="Sete linhas, uma casa. Não há ordem certa para entrar — só o frasco que a sua pele decide manter."
-        cta={{ href: "/colecoes", label: "Ver a coleção" }}
-      />
     </main>
   );
 }
