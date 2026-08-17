@@ -138,7 +138,7 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 ## Deploy
 
 - **Vercel** (configurado em `DEPLOYMENT.md`)
-- Homepage configurada: `https://loja-perfumes.vercel.app`
+- Homepage configurada: `https://loja-perfumes-one.vercel.app/`
 - Variáveis de ambiente em `.env.example`
 - Mercado Pago sandbox → produção na Fase 12
 
