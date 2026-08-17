@@ -135,29 +135,6 @@ npm run media:cinema        # Gera 4 variantes × 6 clipes (ffmpeg, faststart, G
 
 ---
 
-## Riscos Abertos & Próximos Passos
-
-### Riscos de Lançamento (não bloqueiam desenvolvimento)
-- **R5:** Textos legais sem revisão profissional (minutas com banner obrigatório)
-- **R7:** Uso comercial de saída de ferramentas de IA não confirmado
-- **R8:** Nomes de linha fictícios sem busca de anterioridade de marca
-- **R11:** 39.7 MB de vídeo versionados em `public/media/cinema/`
-- **Backup externo** de `docs/media/source/` (380 MB, disco único → risco incêndio/furto/ransomware)
-
-### Decisões Pendentes do Proprietário
-1. `[NOME_DA_LOJA]`, `[DOMINIO]`, `[EMAIL_DE_SUPORTE]`, `[CNPJ_OU_DADOS_DA_EMPRESA]`
-2. `[PROVEDOR_DE_EMAIL]` — bloqueia e-mails transacionais reais
-3. `[PROVEDOR_DE_HOSPEDAGEM]` — bloqueia Fase 12 (staging/produção)
-4. Estratégia de frete (tabela própria ou integração transportadora)
-5. Nomes das 7 linhas de fragrância (proposta em `MEDIA_PLAN.md` §5)
-
-### Próximos Passos Imediatos
-1. **Aprovar/substituir wordmark "Sillage" e nomes de linha** — agora visíveis no site
-2. **Regerar vídeo do hero com frasco mestre** (`_master-bottle.png` como referência)
-3. **Backup externo de mídia** — nuvem, disco removível ou object storage
-
----
-
 ## Deploy
 
 - **Vercel** (configurado em `DEPLOYMENT.md`)
